@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Audit Log",
+    "name": "Flous Flow Audit Log",
     "version": "19.0.2.0.1",
     "author": "Flous Flow (integration), ABF OSIELL, Odoo Community Association (OCA)",
     "license": "AGPL-3",
