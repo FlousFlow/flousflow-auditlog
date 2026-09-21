@@ -1,0 +1,26 @@
+# Copyright 2015 ABF OSIELL <https://osiell.com>
+# Flous Flow integration metadata and packaging changes: Copyright 2026 Flous Flow
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+{
+    "name": "Audit Log",
+    "version": "19.0.2.0.0",
+    "author": "Flous Flow (integration), ABF OSIELL, Odoo Community Association (OCA)",
+    "license": "AGPL-3",
+    "website": "https://flousflow.com",
+    "category": "Tools",
+    "depends": ["base"],
+    "data": [
+        "security/res_groups.xml",
+        "security/ir.model.access.csv",
+        "data/ir_cron.xml",
+        "views/menu.xml",
+        "views/auditlog_http_request_views.xml",
+        "views/auditlog_http_session_views.xml",
+        "views/auditlog_log_line_views.xml",
+        "views/auditlog_log_views.xml",
+        "views/auditlog_rule_views.xml",
+    ],
+    "application": True,
+    "installable": True,
+}
