@@ -5,13 +5,13 @@
         <field name="model">auditlog.attachment.rule</field>
         <field name="arch" type="xml">
             <list>
-                <field name="name" string="اسم القاعدة"/>
-                <field name="company_id" string="الشركة"/>
-                <field name="model_id" string="نوع المستند"/>
-                <field name="stage" string="المرحلة المطلوبة"/>
-                <field name="minimum_count" string="أقل عدد ملفات"/>
-                <field name="protect_evidence" string="حماية المستند"/>
-                <field name="active" string="مفعلة"/>
+                <field name="name" string="Rule Name"/>
+                <field name="company_id" string="Company"/>
+                <field name="model_id" string="Document Type"/>
+                <field name="stage" string="Required At"/>
+                <field name="minimum_count" string="Minimum Files"/>
+                <field name="protect_evidence" string="Protect After Approval"/>
+                <field name="active" string="Active"/>
             </list>
         </field>
     </record>
@@ -21,30 +21,30 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group string="What must be attached? / المطلوب إرفاقه">
-                        <field name="name" string="Rule name / اسم القاعدة" placeholder="Example: Sales invoice PDF / مثال: PDF فاتورة بيع"/>
-                        <field name="company_id" string="Company / الشركة"/>
-                        <field name="model_id" string="Document type / نوع المستند"/>
-                        <field name="stage" string="Required at / مطلوب عند"/>
-                        <field name="minimum_count" string="Minimum files / أقل عدد ملفات"/>
-                        <field name="allowed_mimetypes" string="Allowed file types / أنواع الملفات المسموحة" placeholder="Example: application/pdf"/>
-                        <field name="protect_evidence" string="Protect after approval / حماية الملف بعد الاعتماد"/>
-                        <field name="allow_exception" string="Allow approved exception / السماح باستثناء معتمد"/>
-                        <field name="active" string="Active / مفعلة"/>
+                    <group string="What Must Be Attached?">
+                        <field name="name" string="Rule Name" placeholder="Example: Sales invoice PDF"/>
+                        <field name="company_id" string="Company"/>
+                        <field name="model_id" string="Document Type"/>
+                        <field name="stage" string="Required At"/>
+                        <field name="minimum_count" string="Minimum Files"/>
+                        <field name="allowed_mimetypes" string="Allowed File Types" placeholder="Example: application/pdf"/>
+                        <field name="protect_evidence" string="Protect After Approval"/>
+                        <field name="allow_exception" string="Allow Approved Exception"/>
+                        <field name="active" string="Active"/>
                     </group>
-                    <separator string="Who and when? / على مين وإمتى؟"/>
+                    <separator string="Who and When?"/>
                     <group>
                         <field name="model_name" invisible="1"/>
-                        <field name="domain_text" string="Apply only to / طبق على" widget="domain" options="{'model': 'model_name', 'in_dialog': True, 'allow_expressions': False}" help="Leave broad or filter the documents using the normal filter builder. / سيبها عامة أو حدد المستندات باستخدام الفلاتر العادية."/>
-                        <field name="user_ids" string="Specific users / مستخدمين محددين" widget="many2many_tags"/>
-                        <field name="group_ids" string="Specific groups / مجموعات محددة" widget="many2many_tags"/>
+                        <field name="domain_text" string="Apply Only To" widget="domain" options="{'model': 'model_name', 'in_dialog': True, 'allow_expressions': False}" help="Leave this empty to apply to all documents, or use the standard filter builder."/>
+                        <field name="user_ids" string="Specific Users" widget="many2many_tags"/>
+                        <field name="group_ids" string="Specific Groups" widget="many2many_tags"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
     <record id="action_attachment_control" model="ir.actions.act_window">
-        <field name="name">Document Rules / قواعد المستندات</field>
+        <field name="name">Document Rules</field>
         <field name="res_model">auditlog.attachment.rule</field>
         <field name="view_mode">list,form</field>
         <field name="context">{'active_test': False}</field>
@@ -53,7 +53,7 @@
             <p>Create a rule to require supporting files before confirmation, posting, or completion.</p>
         </field>
     </record>
-    <menuitem id="menu_attachment_control" name="قواعد المستندات"
+    <menuitem id="menu_attachment_control" name="Document Rules"
               parent="menu_audit_setup" action="action_attachment_control"
               groups="flousflow_auditlog.group_document_control_manager" sequence="25"/>
     <record id="view_supporting_evidence_list" model="ir.ui.view">
@@ -73,11 +73,11 @@
         <field name="model">auditlog.attachment.compliance</field>
         <field name="arch" type="xml">
             <list create="false" edit="false" delete="false">
-                <field name="create_date" string="التاريخ"/><field name="resource_name" string="المستند"/>
-                <field name="model_name" string="نوع المستند"/><field name="company_id" string="الشركة"/>
-                <field name="status" string="الحالة"/><field name="rule_name" string="القاعدة"/><field name="stage" string="المرحلة"/><field name="user_id" string="المستخدم"/>
-                <field name="required_count" string="المطلوب"/><field name="actual_count" string="الموجود"/>
-                <field name="protect_evidence" string="محمي"/>
+                <field name="create_date" string="Date"/><field name="resource_name" string="Document"/>
+                <field name="model_name" string="Document Type"/><field name="company_id" string="Company"/>
+                <field name="status" string="Status"/><field name="rule_name" string="Rule"/><field name="stage" string="Stage"/><field name="user_id" string="User"/>
+                <field name="required_count" string="Required"/><field name="actual_count" string="Actual"/>
+                <field name="protect_evidence" string="Protected"/>
             </list>
         </field>
     </record>
@@ -96,7 +96,7 @@
         </field>
     </record>
     <record id="action_compliance" model="ir.actions.act_window">
-        <field name="name">Compliance Status / حالة الالتزام</field>
+        <field name="name">Compliance Status</field>
         <field name="res_model">auditlog.attachment.compliance</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
@@ -104,7 +104,7 @@
             <p>Compliance entries are created automatically when a controlled document reaches its configured stage.</p>
         </field>
     </record>
-    <menuitem id="menu_compliance" name="حالة الالتزام"
+    <menuitem id="menu_compliance" name="Compliance Status"
               parent="menu_audit_monitoring" action="action_compliance"
               groups="flousflow_auditlog.group_document_control_reader" sequence="26"/>
     <record id="view_exception_list" model="ir.ui.view">
@@ -130,11 +130,11 @@
         </field>
     </record>
     <record id="action_exceptions" model="ir.actions.act_window">
-        <field name="name">Exceptions / الاستثناءات</field>
+        <field name="name">Exceptions</field>
         <field name="res_model">auditlog.attachment.exception</field>
         <field name="view_mode">list,form</field>
     </record>
-    <menuitem id="menu_attachment_exceptions" name="الاستثناءات" parent="menu_audit_approvals"
+    <menuitem id="menu_attachment_exceptions" name="Exceptions" parent="menu_audit_approvals"
               action="action_exceptions" groups="flousflow_auditlog.group_attachment_exception" sequence="27"/>
     <record id="view_evidence_upload_form" model="ir.ui.view">
         <field name="name">auditlog.evidence.upload.form</field>

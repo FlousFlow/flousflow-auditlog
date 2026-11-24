@@ -651,6 +651,7 @@ msgstr "الاستثناءات المستندية"
 
 #. module: flousflow_auditlog
 #: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__company_id
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
 msgid "Company"
 msgstr "الشركة"
 
@@ -691,6 +692,7 @@ msgstr "مجموعات الصلاحيات الخاضعة للرقابة"
 
 #. module: flousflow_auditlog
 #: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__active
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
 msgid "Active"
 msgstr "نشط"
 
@@ -776,6 +778,7 @@ msgstr "حدث غير مرتبط"
 
 #. module: flousflow_auditlog
 #: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__rule_name
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
 msgid "Rule Name"
 msgstr "اسم القاعدة"
 
@@ -876,6 +879,7 @@ msgstr "المرفقات الحالية"
 
 #. module: flousflow_auditlog
 #: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_control_context_form
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit
 msgid "Internal Control"
 msgstr "الرقابة الداخلية"
 
@@ -956,3 +960,193 @@ msgstr "مدير الرقابة المستندية (الشركات المسمو�
 #: model:res.groups,name:flousflow_auditlog.group_attachment_exception
 msgid "Attachment Exception Approver"
 msgstr "معتمد الاستثناءات المستندية"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "What Must Be Attached?"
+msgstr "المطلوب إرفاقه"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Required At"
+msgstr "مطلوب عند"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Minimum Files"
+msgstr "الحد الأدنى للملفات"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Allowed File Types"
+msgstr "أنواع الملفات المسموحة"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Protect After Approval"
+msgstr "حماية المستند بعد الاعتماد"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Allow Approved Exception"
+msgstr "السماح باستثناء معتمد"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Who and When?"
+msgstr "على من ومتى؟"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Apply Only To"
+msgstr "التطبيق على"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Specific Users"
+msgstr "مستخدمون محددون"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Specific Groups"
+msgstr "مجموعات محددة"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_views
+msgid "Document Rules"
+msgstr "قواعد المستندات"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,help:flousflow_auditlog.action_attachment_control
+msgid "No document rules yet."
+msgstr "لا توجد قواعد مستندات حتى الآن."
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,help:flousflow_auditlog.action_attachment_control
+msgid "Create a rule to require supporting files before confirmation, posting, or completion."
+msgstr "أنشئ قاعدة لطلب المستندات المؤيدة قبل التأكيد أو الترحيل أو الإتمام."
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_compliance
+msgid "Compliance Status"
+msgstr "حالة الالتزام"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_exceptions
+msgid "Exceptions"
+msgstr "الاستثناءات"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit_monitoring
+msgid "Monitoring"
+msgstr "المتابعة"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit_setup
+msgid "Setup"
+msgstr "الإعداد"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit_approvals
+msgid "Approvals"
+msgstr "الاعتمادات"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_rule
+msgid "Audit Rules"
+msgstr "قواعد التدقيق"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_log
+msgid "Detailed Logs"
+msgstr "السجلات التفصيلية"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_activity
+msgid "Activity Feed"
+msgstr "نشاط العمليات"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_line
+msgid "Field Changes"
+msgstr "تغييرات الحقول"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_http_request
+msgid "Technical Requests"
+msgstr "الطلبات التقنية"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_http_session
+msgid "User Sessions"
+msgstr "جلسات المستخدمين"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__model_name
+msgid "Technical Model Name"
+msgstr "الاسم التقني للنموذج"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Document Type"
+msgstr "نوع المستند"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "What should be monitored?"
+msgstr "ماذا نراقب؟"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Document type"
+msgstr "نوع المستند"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Detail level"
+msgstr "مستوى التفاصيل"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Log Values on Deletion"
+msgstr "تسجيل القيم عند الحذف"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Exclude users"
+msgstr "استثناء المستخدمين"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Exclude fields"
+msgstr "استثناء الحقول"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Track actions"
+msgstr "تسجيل العمليات"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Create"
+msgstr "إنشاء"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Open and read"
+msgstr "فتح وقراءة"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Edit"
+msgstr "تعديل"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Delete"
+msgstr "حذف"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+msgid "Export"
+msgstr "تصدير"

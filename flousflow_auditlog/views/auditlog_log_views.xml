@@ -148,13 +148,13 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auditlog_log_tree">
-        <field name="name">Detailed Logs / السجلات التفصيلية</field>
+        <field name="name">Detailed Logs</field>
         <field name="res_model">auditlog.log</field>
         <field name="search_view_id" ref="view_auditlog_log_search" />
     </record>
     <menuitem
         id="menu_audit_logs"
-        name="السجلات التفصيلية"
+        name="Detailed Logs"
         parent="menu_audit_monitoring"
         action="action_auditlog_log_tree"
         sequence="20"
@@ -211,7 +211,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auditlog_activity">
-        <field name="name">Activity Feed / نشاط العمليات</field>
+        <field name="name">Activity Feed</field>
         <field name="res_model">auditlog.activity</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_auditlog_activity_search"/>
@@ -221,7 +221,7 @@
             <p>Confirmed audit rules will appear here automatically when users work on monitored documents.</p>
         </field>
     </record>
-    <menuitem id="menu_audit_activity" name="نشاط العمليات"
+    <menuitem id="menu_audit_activity" name="Activity Feed"
               parent="menu_audit_monitoring" action="action_auditlog_activity" sequence="10"
               groups="flousflow_auditlog.group_auditlog_user"/>
 </odoo>

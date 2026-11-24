@@ -4,17 +4,17 @@
         <field name="name">auditlog.rule.form</field>
         <field name="model">auditlog.rule</field>
         <field name="arch" type="xml">
-            <form string="Audit Rule / قاعدة تدقيق">
+            <form string="Audit Rule">
                 <header>
                     <button
-                        string="Confirm / تأكيد"
+                        string="Confirm"
                         name="set_to_confirmed"
                         type="object"
                         invisible="state != 'draft'"
                         class="oe_highlight"
                     />
                     <button
-                        string="Set to Draft / إرجاع لمسودة"
+                        string="Set to Draft"
                         name="set_to_draft"
                         type="object"
                         invisible="state != 'confirmed'"
@@ -26,40 +26,43 @@
                         <h1>
                             <field
                                 name="name"
-                                placeholder="Example: Sales invoice changes / مثال: تغييرات فواتير البيع"
+                                placeholder="Example: Sales invoice changes"
                                 readonly="state == 'confirmed'"
                             />
                         </h1>
                     </div>
                     <group>
-                        <group string="What should be monitored? / ماذا نراقب؟">
-                            <label for="model_id" string="Document type / نوع المستند"/>
+                        <group string="What should be monitored?">
+                            <label for="model_id" string="Document type"/>
                             <field
                                 name="model_id"
+                                nolabel="1"
                                 options="{'no_create': True}"
                                 readonly="state == 'confirmed'"
                             />
-                            <label for="log_type" string="Detail level / مستوى التفاصيل"/>
+                            <label for="log_type" string="Detail level"/>
                             <field
                                 name="log_type"
+                                nolabel="1"
                                 widget="radio"
                                 readonly="state == 'confirmed'"
                             />
                             <field
                                 name="capture_record"
+                                string="Log Values on Deletion"
                                 readonly="state == 'confirmed'"
                                 invisible="log_type != 'full' or log_unlink != True"
                             />
                             <field
                                 name="users_to_exclude_ids"
-                                string="Exclude users / استثناء مستخدمين"
+                                string="Exclude users"
                                 widget="many2many_tags"
                                 options="{'no_create': True}"
                                 readonly="state == 'confirmed'"
                             />
                             <field
                                 name="fields_to_exclude_ids"
-                                string="Exclude fields / استثناء حقول"
+                                string="Exclude fields"
                                 widget="many2many_tags"
                                 options="{'no_create': True}"
                                 readonly="state == 'confirmed'"
@@ -70,14 +73,14 @@
                                 groups="base.group_no_one"
                             />
                         </group>
-                        <group string="Track actions / العمليات المسجلة">
-                            <field name="log_create" string="Create / إنشاء" readonly="state == 'confirmed'" />
-                            <field name="log_read" string="Open and read / فتح وقراءة" readonly="state == 'confirmed'" />
-                            <field name="log_write" string="Edit / تعديل" readonly="state == 'confirmed'" />
-                            <field name="log_unlink" string="Delete / حذف" readonly="state == 'confirmed'" />
+                        <group string="Track actions">
+                            <field name="log_create" string="Create" readonly="state == 'confirmed'" />
+                            <field name="log_read" string="Open and read" readonly="state == 'confirmed'" />
+                            <field name="log_write" string="Edit" readonly="state == 'confirmed'" />
+                            <field name="log_unlink" string="Delete" readonly="state == 'confirmed'" />
                             <field
                                 name="log_export_data"
-                                string="Export / تصدير"
+                                string="Export"
                                 readonly="state == 'confirmed'"
                             />
                         </group>
@@ -94,15 +97,15 @@
                 decoration-info="state == 'draft'"
                 decoration-bf="state == 'confirmed'"
             >
-                <field name="name" string="اسم القاعدة" />
-                <field name="model_id" string="نوع المستند" />
-                <field name="log_type" string="مستوى التفاصيل" />
-                <field name="log_read" string="فتح وقراءة" />
-                <field name="log_write" string="تعديل" />
-                <field name="log_unlink" string="حذف" />
-                <field name="log_create" string="إنشاء" />
-                <field name="log_export_data" string="تصدير" />
-                <field name="state" string="الحالة" />
+                <field name="name" string="Rule name" />
+                <field name="model_id" string="Document type" />
+                <field name="log_type" string="Detail level" />
+                <field name="log_read" string="Open and read" />
+                <field name="log_write" string="Edit" />
+                <field name="log_unlink" string="Delete" />
+                <field name="log_create" string="Create" />
+                <field name="log_export_data" string="Export" />
+                <field name="state" string="Status" />
             </list>
         </field>
     </record>
@@ -135,7 +138,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auditlog_rule_tree">
-        <field name="name">Audit Rules / قواعد التدقيق</field>
+        <field name="name">Audit Rules</field>
         <field name="res_model">auditlog.rule</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">list,form</field>
@@ -144,7 +147,7 @@
     </record>
     <menuitem
         id="menu_action_auditlog_rule_tree"
-        name="قواعد التدقيق"
+        name="Audit Rules"
         parent="menu_audit_setup"
         action="action_auditlog_rule_tree"
         sequence="10"

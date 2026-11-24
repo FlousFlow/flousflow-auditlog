@@ -2,18 +2,18 @@
 <odoo>
     <menuitem
         id="menu_audit"
-        name="الرقابة الداخلية"
+        name="Internal Control"
         sequence="50"
         groups="flousflow_auditlog.group_auditlog_user,flousflow_auditlog.group_document_control_reader"
         web_icon="flousflow_auditlog,static/description/icon.png"
     />
-    <menuitem id="menu_audit_monitoring" name="المتابعة"
+    <menuitem id="menu_audit_monitoring" name="Monitoring"
               parent="menu_audit" sequence="10"
               groups="flousflow_auditlog.group_auditlog_user,flousflow_auditlog.group_document_control_reader"/>
-    <menuitem id="menu_audit_setup" name="الإعداد"
+    <menuitem id="menu_audit_setup" name="Setup"
               parent="menu_audit" sequence="20"
               groups="flousflow_auditlog.group_auditlog_manager,flousflow_auditlog.group_document_control_manager"/>
-    <menuitem id="menu_audit_approvals" name="الاعتمادات"
+    <menuitem id="menu_audit_approvals" name="Approvals"
               parent="menu_audit" sequence="30"
               groups="flousflow_auditlog.group_attachment_exception"/>
     <record id="menu_audit" model="ir.ui.menu">
