@@ -1,7 +1,8 @@
 # Odoo 20 development branch — NOT a release
 
 Original base: 19.0 at 724b754df1b9fbd878c56b64a4192872e2d1298b.
-Odoo upstream source inspected: d2a79d46ca412077759b0d4fb5caa0ffbfec3bd5.
+Odoo upstream source used for local Odoo 20 testing: `17ff827a18248397342e73bb2bcac48e2b8e1027`.
+The CI workflow is pinned to the same commit so local and remote validation use the same ORM/API surface.
 
 ## Implemented development increments
 - Grouped Business Activity plus unchanged raw Technical Logs. Explicit server-side operation scope takes precedence; HTTP request + user fallback is not a guarantee of a business operation. Old/no-request logs stay separate.
@@ -66,3 +67,10 @@ Added regression tests for protected evidence, snapshot immutability, and duplic
 - First static gate passed; fresh install failed at registry field setup: Odoo 20 forbids restrict ondelete to ir.model. Changed rule model link to cascade (a model that is removed cannot retain a live control rule; test uninstall separately).
 - Scope test tags to this module suite, improve CI failure diagnostics and use explicit PostgreSQL health-check database.
 - Arabic catalog updates for new menus, views, fields, stages and access groups; existing catalog is incomplete and runtime translation import still needs verification.
+
+## Odoo 20 compatibility verification (2026-11-24)
+- Updated the access-control data format from the removed `ir.model.access` model/`perm_*` columns to Odoo 20 `ir.access` with compact CRUD operations and validated company domains.
+- Replaced the deprecated `_table_query` projection hook with Odoo 20 `_table_sql` for `auditlog.log.line.view`.
+- Removed legacy `ir.rule` records; company-scoped document-control access is now represented by Odoo 20 `ir.access` domain entries.
+- Updated HTTP test patch targets to the preserved technical module name `flousflow_auditlog` and migrated evidence creation to Odoo 20 `ir.attachment.raw`/`BinaryValue` behavior.
+- Local static checks passed (57 files). A fresh installation on PostgreSQL 17 and Odoo 20 commit `17ff827a18248397342e73bb2bcac48e2b8e1027` loaded all six modules; the subsequent upgrade/test run completed with exit code 0 and 59 tests (0 failures/errors).

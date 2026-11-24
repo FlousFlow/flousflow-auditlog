@@ -18,7 +18,7 @@ class TestModelAuditlogLog(BaseCommon):
         ):
             with self.env.cr.savepoint():
                 self.env["auditlog.log"].create({})
-        log = self.env["auditlog.log"].create(
+        log = self.env["auditlog.log"].sudo().create(
             {
                 "model_id": model_id,
             },
@@ -38,12 +38,12 @@ class TestModelAuditlogLog(BaseCommon):
             "No field defined to create line",
         ):
             with self.env.cr.savepoint():
-                line = self.env["auditlog.log.line"].create(
+                line = self.env["auditlog.log.line"].sudo().create(
                     {
                         "log_id": log.id,
                     },
                 )
-        line = self.env["auditlog.log.line"].create(
+        line = self.env["auditlog.log.line"].sudo().create(
             {
                 "log_id": log.id,
                 "field_id": field_id,

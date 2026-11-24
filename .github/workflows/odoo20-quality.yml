@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: odoo/odoo
-          ref: d2a79d46ca412077759b0d4fb5caa0ffbfec3bd5
+          ref: 17ff827a18248397342e73bb2bcac48e2b8e1027
           path: upstream-odoo
           persist-credentials: false
       - name: Install upstream dependencies

@@ -15,7 +15,7 @@
     "depends": ["base", "web"],
     "data": [
         "security/res_groups.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/ir_cron.xml",
         "views/menu.xml",
         "views/auditlog_http_request_views.xml",

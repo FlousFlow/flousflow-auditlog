@@ -21,7 +21,7 @@ class TestModelAuditlogRule(BaseCommon):
                         "name": "Test rule",
                     },
                 )
-        rule = self.env["auditlog.rule"].create(
+        rule = self.env["auditlog.rule"].sudo().create(
             {
                 "name": "Test rule",
                 "model_id": model_id,

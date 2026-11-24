@@ -435,7 +435,7 @@ class AuditEvidenceUpload(models.TransientModel):
         if not self.data or not self.filename:
             raise UserError(self.env._("Select a file to upload."))
         self.env["ir.attachment"].create({
-            "name": self.filename, "datas": self.data,
+            "name": self.filename, "raw": self.data,
             "res_model": record._name, "res_id": record.id,
             "company_id": record.company_id.id or False,
             "ff_audit_evidence": True,

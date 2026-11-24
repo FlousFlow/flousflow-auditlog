@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, tools
 
 
 class AuditlogLogLineView(models.Model):
@@ -60,5 +60,10 @@ class AuditlogLogLineView(models.Model):
         """
 
     @property
-    def _table_query(self):
-        return f"SELECT {self._select_query()} FROM {self._from_query()}"
+    def _table_sql(self):
+        """Expose the read-only projection using the Odoo 20 table API."""
+        return tools.SQL("(%s)", tools.SQL(
+            "SELECT %s FROM %s",
+            tools.SQL(self._select_query()),
+            tools.SQL(self._from_query()),
+        ))
