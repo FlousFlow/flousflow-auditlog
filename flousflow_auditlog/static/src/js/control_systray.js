@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, signal, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
@@ -7,19 +7,20 @@ import { _t } from "@web/core/l10n/translation";
 
 class AttachmentControlSystray extends Component {
     static template = "flousflow_auditlog.AttachmentControlSystray";
-    static props = {};
+    props = useProps({});
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
         this.notification = useService("notification");
-        this.state = useState({ allowed: false, busy: false });
+        this.allowed = signal(false);
+        this.busy = signal(false);
         onWillStart(async () => {
-            this.state.allowed = await user.hasGroup("flousflow_auditlog.group_document_control_manager");
+            this.allowed.set(await user.hasGroup("flousflow_auditlog.group_document_control_manager"));
         });
     }
 
     async openRules() {
-        if (!this.state.allowed || this.state.busy) {
+        if (!this.allowed() || this.busy()) {
             return;
         }
         const controller = this.action.currentController;
@@ -28,7 +29,7 @@ class AttachmentControlSystray extends Component {
             this.notification.add(_t("Open a supported business document first."), { type: "warning" });
             return;
         }
-        this.state.busy = true;
+        this.busy.set(true);
         try {
             const recordId = controller.currentState?.resId || controller.props?.resId || false;
             const moveType = current.context?.default_move_type || false;
@@ -36,7 +37,7 @@ class AttachmentControlSystray extends Component {
                 [current.res_model, recordId, moveType, current.context?.default_picking_type_id || false, current.context?.default_payment_type || false]);
             await this.action.doAction(action);
         } finally {
-            this.state.busy = false;
+            this.busy.set(false);
         }
     }
 }
