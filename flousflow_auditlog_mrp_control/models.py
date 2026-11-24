@@ -1,6 +1,6 @@
 # License AGPL-3.0 or later.
 from odoo import api, models
-from odoo.addons.flousflow_auditlog.models.operation_scope import audit_operation
+from odoo.addons.flousflow_auditlog.models.operation_scope import audit_document_operation
 
 
 class AuditAttachmentRule(models.Model):
@@ -16,7 +16,7 @@ class MrpProduction(models.Model):
 
     def action_confirm(self):
         pending = self.filtered(lambda rec: rec.state == "draft")
-        with audit_operation(self.env._("Confirm manufacturing order")):
+        with audit_document_operation(self, self.env._("Confirm manufacturing order")):
             result = super().action_confirm()
             self.env["auditlog.attachment.rule"]._check_attachments(
                 pending.filtered(lambda rec: rec.state not in ("draft", "cancel")),
@@ -26,7 +26,7 @@ class MrpProduction(models.Model):
 
     def button_mark_done(self):
         pending = self.filtered(lambda rec: rec.state not in ("done", "cancel"))
-        with audit_operation(self.env._("Complete manufacturing order")):
+        with audit_document_operation(self, self.env._("Complete manufacturing order")):
             result = super().button_mark_done()
             self.env["auditlog.attachment.rule"]._check_attachments(
                 pending.filtered(lambda rec: rec.state == "done"), "complete", capture=True
@@ -39,7 +39,7 @@ class MrpUnbuild(models.Model):
 
     def action_unbuild(self):
         pending = self.filtered(lambda rec: rec.state == "draft")
-        with audit_operation(self.env._("Complete unbuild order")):
+        with audit_document_operation(self, self.env._("Complete unbuild order")):
             result = super().action_unbuild()
             self.env["auditlog.attachment.rule"]._check_attachments(
                 pending.filtered(lambda rec: rec.state == "done"), "complete", capture=True

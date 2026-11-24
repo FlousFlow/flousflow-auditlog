@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later.
 from odoo import api, models
 
-from odoo.addons.flousflow_auditlog.models.operation_scope import audit_operation
+from odoo.addons.flousflow_auditlog.models.operation_scope import audit_document_operation
 
 
 class AuditAttachmentRule(models.Model):
@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     def action_confirm(self):
-        with audit_operation(self.env._("Confirm sales order")):
+        with audit_document_operation(self, self.env._("Confirm sales order")):
             return super().action_confirm()
 
     def write(self, vals):
@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
         transitioning = self.filtered(lambda rec: rec.state != "sale") if vals.get("state") == "sale" else self.browse()
         if not transitioning:
             return super().write(vals)
-        with audit_operation(self.env._("Confirm sales order")):
+        with audit_document_operation(self, self.env._("Confirm sales order")):
             result = super().write(vals)
             completed = transitioning.filtered(lambda rec: rec.state == "sale")
             self.env["auditlog.attachment.rule"]._check_attachments(completed, "confirm", capture=True)

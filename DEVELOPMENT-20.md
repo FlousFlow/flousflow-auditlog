@@ -40,3 +40,9 @@ Added regression tests for protected evidence, snapshot immutability, and duplic
 - Store operation key on compliance snapshots when a trusted scope exists.
 - Expose Audit parent menu to the audit group, rather than system administrators only. Existing raw audit access requires separate hardening review.
 - Added wizard and one-use exception regression test source; not executed. No CI/runtime setup verified.
+
+## Fifth increment: one row per correlated activity
+- Read-only SQL projection auditlog.activity, with one row per trusted operation key, HTTP request/user fallback or individual uncorrelated event. Original logs remain the authority. Standard list, form and search views, exact drill-down, event/record counts and compliance link. Operation labels include document name when a single root record is available. Batch actions remain one operation with multiple records; no time-based merging. HTTP request fallback is labelled as such, not a verified business transaction.
+- Summary access intentionally matches the existing global audit reader role; legacy audit records do not provide reliable company ownership. Company-isolated technical audit access remains a blocker; do not grant this role to branch-restricted users.
+- Summary is a live projection; row IDs can change if underlying logs are purged. Retention and large-volume SQL performance still need tests.
+- Added Odoo regression test source and disposable database test runner scripts/test-odoo20.sh. Runtime not executed in this environment: Docker/PostgreSQL binaries unavailable and direct GitHub checkout cannot resolve host.

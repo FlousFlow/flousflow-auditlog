@@ -24,3 +24,15 @@ def audit_operation(label):
         yield key
     finally:
         _operation.reset(token)
+
+
+@contextmanager
+def audit_document_operation(records, label):
+    """Label a synchronous business action without claiming its entire batch is one document."""
+    if current_operation() is None and records:
+        if len(records) == 1:
+            label = "%s — %s" % (label, records.display_name)
+        else:
+            label = "%s (%s records)" % (label, len(records))
+    with audit_operation(label) as key:
+        yield key

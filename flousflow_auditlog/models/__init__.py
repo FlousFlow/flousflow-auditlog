@@ -8,3 +8,5 @@ from . import auditlog_log_line_view
 from . import auditlog_rule
 
 from . import attachment_control
+
+from . import auditlog_activity

@@ -7,3 +7,4 @@ from . import test_http_session
 from . import test_model_auditlog_rule
 from . import test_model_auditlog_log
 from . import test_operation_scope
+from . import test_business_activity
