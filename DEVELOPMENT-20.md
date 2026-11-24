@@ -25,3 +25,5 @@ Odoo upstream source inspected: d2a79d46ca412077759b0d4fb5caa0ffbfec3bd5.
 - Serialize evidence verification and mutation with attachment-row locks; concurrency and rollback tests are still required. No guarantee against direct SQL or administrator-level code.
 - Contextual defaults now support exact picking operation type when known. Generic listing may still need manual domain selection.
 - Original release blockers above remain except where implemented here. Payment, scrap, adjustment, exception and secure upload provenance remain pending. No production readiness claim.
+
+Added regression tests for protected evidence, snapshot immutability, and duplicate hashes. Runtime tests remain unexecuted.
