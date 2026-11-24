@@ -20,3 +20,5 @@ access_attachment_compliance_user,attachment_compliance_user,model_auditlog_atta
 
 access_exception_reader,exception_reader,model_auditlog_attachment_exception,flousflow_auditlog.group_auditlog_user,1,0,0,0
 access_exception_approver,exception_approver,model_auditlog_attachment_exception,flousflow_auditlog.group_attachment_exception,1,0,1,0
+
+access_evidence_upload,evidence_upload,model_auditlog_evidence_upload,base.group_user,1,1,1,1

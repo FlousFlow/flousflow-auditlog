@@ -33,3 +33,10 @@ Added regression tests for protected evidence, snapshot immutability, and duplic
 - One-use exception grant requires separate approver, target rule and document, another user, mandatory reason and expiry within seven days. Rule change invalidates grant. Consumption uses a row lock and is recorded in the compliance snapshot. Defaults off. Grant creation UI currently uses resource ID; no contextual request wizard or cancellation yet.
 - Prevent context defaults from setting protected attachment flag on create.
 - No runtime tests yet; all new integration points and access controls need installation, functional and security tests. Payment registration wizard and automatically generated moves require particular attention.
+
+## Evidence UX and regression follow-up
+- Standard transient upload wizard directly creates designated ir.attachment evidence after checking target document write permission; also offers existing attachment designation. Usable on a saved record even without chatter. No new binary storage.
+- Correct quant hash filtering to compare previous compliance for the same rule, avoiding a new rule's current capture blocking a second applicable rule. Reuse across distinct rules is intentional. Quant lifetime/recreation and historical hash persistence still need review.
+- Store operation key on compliance snapshots when a trusted scope exists.
+- Expose Audit parent menu to the audit group, rather than system administrators only. Existing raw audit access requires separate hardening review.
+- Added wizard and one-use exception regression test source; not executed. No CI/runtime setup verified.

@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, Command
 from odoo.tools import SQL
 from odoo.exceptions import ValidationError, UserError
+from .operation_scope import current_operation
 
 
 class AuditAttachmentRule(models.Model):
@@ -87,6 +88,8 @@ class AuditAttachmentRule(models.Model):
                 if picking_type.company_id == self.env.company:
                     defaults["default_domain_text"] = repr([("picking_type_id", "=", picking_type.id)])
         if model_name == "stock.move":
+            if record_id and record and not record.is_scrap:
+                raise UserError(self.env._("Only scrap moves are supported on this model."))
             defaults["default_domain_text"] = repr([("is_scrap", "=", True)])
         if model_name == "account.payment" and payment_type in {"inbound", "outbound"}:
             defaults["default_domain_text"] = repr([("payment_type", "=", payment_type)])
@@ -105,18 +108,16 @@ class AuditAttachmentRule(models.Model):
         record = self.env[model_name].browse(record_ids).exists()
         record.ensure_one()
         record.check_access("write")
-        view = self.env.ref("flousflow_auditlog.view_supporting_evidence_list")
+        if model_name == "stock.move" and not record.is_scrap:
+            raise UserError(self.env._("Only scrap moves are supported on this model."))
+        view = self.env.ref("flousflow_auditlog.view_evidence_upload_form")
         return {
             "type": "ir.actions.act_window",
             "name": self.env._("Supporting documents"),
-            "res_model": "ir.attachment",
-            "views": [(view.id, "list")],
-            "domain": [
-                ("res_model", "=", model_name), ("res_id", "=", record.id),
-                ("res_field", "=", False), ("type", "=", "binary"),
-                ("file_size", ">", 0),
-            ],
-            "target": "current",
+            "res_model": "auditlog.evidence.upload",
+            "views": [(view.id, "form")],
+            "context": {"default_model_name": model_name, "default_resource_id": record.id},
+            "target": "new",
         }
 
     @api.model
@@ -164,6 +165,7 @@ class AuditAttachmentRule(models.Model):
                     previous = self.env["auditlog.attachment.compliance"].sudo().search([
                         ("model_name", "=", record._name), ("resource_id", "=", record.id),
                         ("stage", "=", stage), ("company_id", "=", record.company_id.id),
+                        ("rule_id", "=", rule.id),
                     ])
                     used = {digest for row in previous for digest in (row.evidence_digest or "").splitlines()}
                     evidence = evidence.filtered(lambda att: att.checksum not in used)
@@ -189,6 +191,7 @@ class AuditAttachmentRule(models.Model):
                         "rule_domain": rule.domain_text,
                         "stage": stage,
                         "user_id": actor.id,
+                        "operation_key": current_operation() or False,
                         "status": "exception" if grant else "compliant",
                         "exception_id": grant.id if grant else False,
                         "exception_reason": grant.reason if grant else False,
@@ -217,6 +220,7 @@ class AuditAttachmentCompliance(models.Model):
     rule_domain = fields.Char()
     stage = fields.Char(required=True)
     user_id = fields.Many2one("res.users")
+    operation_key = fields.Char(index=True, readonly=True)
     status = fields.Selection([("compliant", "Compliant"), ("exception", "Authorized exception")], default="compliant", required=True)
     exception_id = fields.Many2one("auditlog.attachment.exception", ondelete="restrict")
     exception_reason = fields.Text()
@@ -374,3 +378,53 @@ class AuditAttachmentException(models.Model):
             super(AuditAttachmentException, grant).write({"consumed_at": fields.Datetime.now()})
             return grant
         return self.browse()
+
+
+class AuditEvidenceUpload(models.TransientModel):
+    _name = "auditlog.evidence.upload"
+    _description = "Upload supporting document"
+
+    model_name = fields.Char(required=True, readonly=True)
+    resource_id = fields.Integer(required=True, readonly=True)
+    filename = fields.Char()
+    data = fields.Binary(attachment=False)
+
+    def _target(self):
+        self.ensure_one()
+        engine = self.env["auditlog.attachment.rule"]
+        if not any(point[0] == self.model_name for point in engine._supported_points()):
+            raise UserError(self.env._("Unsupported document."))
+        record = self.env[self.model_name].browse(self.resource_id).exists()
+        record.ensure_one()
+        record.check_access("write")
+        if self.model_name == "stock.move" and not record.is_scrap:
+            raise UserError(self.env._("Only scrap moves are supported on this model."))
+        if record.company_id and record.company_id not in self.env.companies:
+            raise UserError(self.env._("Document company is not accessible."))
+        return record
+
+    def action_upload(self):
+        record = self._target()
+        if not self.data or not self.filename:
+            raise UserError(self.env._("Select a file to upload."))
+        self.env["ir.attachment"].create({
+            "name": self.filename, "datas": self.data,
+            "res_model": record._name, "res_id": record.id,
+            "company_id": record.company_id.id or False,
+            "ff_audit_evidence": True,
+        })
+        return {"type": "ir.actions.act_window_close"}
+
+    def action_existing(self):
+        record = self._target()
+        view = self.env.ref("flousflow_auditlog.view_supporting_evidence_list")
+        return {
+            "type": "ir.actions.act_window", "name": self.env._("Supporting documents"),
+            "res_model": "ir.attachment", "views": [(view.id, "list")],
+            "domain": [
+                ("res_model", "=", record._name), ("res_id", "=", record.id),
+                ("res_field", "=", False), ("type", "=", "binary"),
+                ("file_size", ">", 0),
+            ],
+            "target": "current",
+        }
