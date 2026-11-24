@@ -1,0 +1,70 @@
+name: Odoo 20 quality gates
+on:
+  push:
+    branches: ['20.0']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/static_checks.py
+      - run: bash -n scripts/test-odoo20.sh
+  integration:
+    needs: static
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: audit_test_only
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U odoo"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: odoo/odoo
+          ref: d2a79d46ca412077759b0d4fb5caa0ffbfec3bd5
+          path: upstream-odoo
+          persist-credentials: false
+      - name: Install upstream dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libldap2-dev libsasl2-dev libpq-dev libxml2-dev libxslt1-dev libjpeg-dev zlib1g-dev libffi-dev libssl-dev libmagic1 libfreetype6-dev build-essential
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -r upstream-odoo/requirements.txt
+      - name: Fresh install and regression tests
+        env:
+          ODOO_SOURCE: ${{ github.workspace }}/upstream-odoo
+          AUDIT_TEST_DB: ff_audit_test_ci
+          PYTHON: python
+        run: |
+          bash scripts/test-odoo20.sh --db_host=127.0.0.1 --db_port=5432 --db_user=odoo --db_password=audit_test_only --logfile=odoo-install-test.log
+      - name: Upgrade existing test database
+        env:
+          ODOO_SOURCE: ${{ github.workspace }}/upstream-odoo
+        run: |
+          python upstream-odoo/odoo-bin --addons-path="$ODOO_SOURCE/addons,$GITHUB_WORKSPACE" -d ff_audit_test_ci --db_host=127.0.0.1 --db_port=5432 --db_user=odoo --db_password=audit_test_only --stop-after-init --test-enable -u flousflow_auditlog,flousflow_auditlog_sale_control,flousflow_auditlog_purchase_control,flousflow_auditlog_account_control,flousflow_auditlog_stock_control,flousflow_auditlog_mrp_control --logfile=odoo-upgrade-test.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: odoo-test-logs
+          path: odoo-*-test.log
+          if-no-files-found: warn

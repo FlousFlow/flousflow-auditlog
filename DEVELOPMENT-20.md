@@ -46,3 +46,6 @@ Added regression tests for protected evidence, snapshot immutability, and duplic
 - Summary access intentionally matches the existing global audit reader role; legacy audit records do not provide reliable company ownership. Company-isolated technical audit access remains a blocker; do not grant this role to branch-restricted users.
 - Summary is a live projection; row IDs can change if underlying logs are purged. Retention and large-volume SQL performance still need tests.
 - Added Odoo regression test source and disposable database test runner scripts/test-odoo20.sh. Runtime not executed in this environment: Docker/PostgreSQL binaries unavailable and direct GitHub checkout cannot resolve host.
+
+## Automated quality gate configuration
+- Added static manifest, Python syntax, XML and ACL checks, and a GitHub Actions workflow for fresh installation and same-version upgrade against pinned Odoo 20 and PostgreSQL 16. This is not a tested migration from 19 databases. Workflow results must be inspected before release. Integration tests do not yet cover every required security, concurrency, UX or performance case.
