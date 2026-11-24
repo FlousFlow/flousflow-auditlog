@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="flousflow_auditlog.AttachmentControlSystray">
-        <li t-if="allowed" class="o_systray_item">
-            <button type="button" class="btn btn-link" title="Internal Control"
-                    aria-label="Internal Control" t-on-click="openRules" t-att-disabled="busy">
+        <li class="o_systray_item">
+            <button type="button" class="btn btn-link" t-att-title="this.label"
+                    t-att-aria-label="this.label" t-on-click="this.openRules">
                 <i class="fa fa-shield" aria-hidden="true"/>
             </button>
         </li>

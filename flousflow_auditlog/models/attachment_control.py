@@ -71,7 +71,10 @@ class AuditAttachmentRule(models.Model):
 
     @api.model
     def open_contextual_rules(self, model_name, record_id=False, default_move_type=False, picking_type_id=False, payment_type=False):
-        if not self.env.user.has_group("flousflow_auditlog.group_document_control_manager"):
+        if not (
+            self.env.user.has_group("flousflow_auditlog.group_document_control_manager")
+            or self.env.user.has_group("base.group_system")
+        ):
             raise UserError(self.env._("Only attachment control managers can configure rules."))
         points = sorted(point[1] for point in self._supported_points()
                         if point[0] == model_name)
@@ -479,11 +482,17 @@ class AuditControlContext(models.TransientModel):
         ("active", "Active rules"), ("inactive", "Inactive rules"), ("none", "No rules"),
     ], readonly=True)
     can_configure_audit = fields.Boolean(readonly=True)
+    can_configure_attachments = fields.Boolean(readonly=True)
 
     @api.model
     def open_context(self, model_name, record_id=False, move_type=False, picking_type_id=False, payment_type=False):
-        if not self.env.user.has_group("flousflow_auditlog.group_document_control_manager"):
-            raise UserError(self.env._("Only attachment control managers can configure rules."))
+        can_read_control = (
+            self.env.user.has_group("flousflow_auditlog.group_document_control_reader")
+            or self.env.user.has_group("flousflow_auditlog.group_auditlog_user")
+            or self.env.user.has_group("base.group_system")
+        )
+        if not can_read_control:
+            raise UserError(self.env._("You do not have access to internal control details."))
         model = self.env["ir.model"].sudo().search([("model", "=", model_name)], limit=1)
         if not model or model_name not in self.env or self.env[model_name]._transient:
             raise UserError(self.env._("Open a supported business document first."))
@@ -500,6 +509,10 @@ class AuditControlContext(models.TransientModel):
         if record:
             rules = rules.filtered(lambda rule: bool(record.filtered_domain(literal_eval(rule.domain_text))))
         can_audit = self.env.user.has_group("flousflow_auditlog.group_auditlog_manager")
+        can_configure_attachments = (
+            self.env.user.has_group("flousflow_auditlog.group_document_control_manager")
+            or self.env.user.has_group("base.group_system")
+        )
         audit = self.env["auditlog.rule"].search([("model_id", "=", model.id)], limit=1) if can_audit else False
         wizard = self.create({
             "model_name": model_name, "resource_id": record.id or 0,
@@ -511,21 +524,29 @@ class AuditControlContext(models.TransientModel):
             ),
             "audit_status": "active" if audit and audit.state == "confirmed" else "inactive" if audit else "none",
             "can_configure_audit": can_audit,
+            "can_configure_attachments": can_configure_attachments,
         })
         return {
             "type": "ir.actions.act_window", "name": self.env._("Internal Control"),
-            "res_model": self._name, "res_id": wizard.id, "view_mode": "form", "target": "new",
+            "res_model": self._name, "res_id": wizard.id, "view_mode": "form",
+            "views": [(self.env.ref("flousflow_auditlog.view_control_context_form").id, "form")],
+            "target": "new",
         }
 
     def action_attachment_rules(self):
         self.ensure_one()
+        if not self.can_configure_attachments:
+            raise UserError(self.env._("Only attachment control managers can configure rules."))
         return self.env["auditlog.attachment.rule"].open_contextual_rules(
             self.model_name, self.resource_id, self.move_type, self.picking_type_id, self.payment_type
         )
 
     def action_audit_rules(self):
         self.ensure_one()
-        if not self.env.user.has_group("flousflow_auditlog.group_auditlog_manager"):
+        if not (
+            self.env.user.has_group("flousflow_auditlog.group_auditlog_manager")
+            or self.env.user.has_group("base.group_system")
+        ):
             raise UserError(self.env._("Only global audit managers may configure tracking."))
         model = self.env["ir.model"].sudo().search([("model", "=", self.model_name)], limit=1)
         model.ensure_one()

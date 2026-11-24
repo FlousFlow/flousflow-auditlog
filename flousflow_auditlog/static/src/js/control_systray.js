@@ -1,8 +1,7 @@
 /** @odoo-module **/
-import { Component, onWillStart, signal, useProps } from "@odoo/owl";
+import { Component, signal, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
 
 class AttachmentControlSystray extends Component {
@@ -12,15 +11,12 @@ class AttachmentControlSystray extends Component {
         this.action = useService("action");
         this.orm = useService("orm");
         this.notification = useService("notification");
-        this.allowed = signal(false);
         this.busy = signal(false);
-        onWillStart(async () => {
-            this.allowed.set(await user.hasGroup("flousflow_auditlog.group_document_control_manager"));
-        });
+        this.label = _t("Internal Control");
     }
 
     async openRules() {
-        if (!this.allowed() || this.busy()) {
+        if (this.busy()) {
             return;
         }
         const controller = this.action.currentController;
@@ -36,6 +32,11 @@ class AttachmentControlSystray extends Component {
             const action = await this.orm.call("auditlog.control.context", "open_context",
                 [current.res_model, recordId, moveType, current.context?.default_picking_type_id || false, current.context?.default_payment_type || false]);
             await this.action.doAction(action);
+        } catch (error) {
+            this.notification.add(
+                error?.data?.message || error?.message || _t("Internal control is not available for this screen."),
+                { type: "warning" },
+            );
         } finally {
             this.busy.set(false);
         }

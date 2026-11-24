@@ -164,12 +164,13 @@
                     <field name="document_name"/>
                     <field name="model_name" invisible="1"/>
                     <field name="can_configure_audit" invisible="1"/>
+                    <field name="can_configure_attachments" invisible="1"/>
                     <field name="attachment_status"/>
                     <field name="audit_status" invisible="not can_configure_audit"/>
                 </group>
                 <footer>
                     <button name="action_attachment_rules" type="object" string="Attachment Control"
-                            invisible="attachment_status == 'unsupported'" class="btn-primary"/>
+                            invisible="attachment_status == 'unsupported' or not can_configure_attachments" class="btn-primary"/>
                     <button name="action_audit_rules" type="object" string="Audit Tracking"
                             invisible="not can_configure_audit" class="btn-secondary"/>
                     <button string="Close" special="cancel"/>

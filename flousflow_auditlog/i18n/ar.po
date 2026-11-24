@@ -880,6 +880,7 @@ msgstr "المرفقات الحالية"
 #. module: flousflow_auditlog
 #: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_control_context_form
 #: model:ir.ui.menu,name:flousflow_auditlog.menu_audit
+#: code:addons/flousflow_auditlog/static/src/js/control_systray.js:18
 msgid "Internal Control"
 msgstr "الرقابة الداخلية"
 
