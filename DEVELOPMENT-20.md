@@ -61,3 +61,8 @@ Added regression tests for protected evidence, snapshot immutability, and duplic
 - Standard Odoo 20 domain widget replaces the raw technical text field, with expressions disabled. Actual domain validation remains server-side.
 - Correct exception approver implied group to company document reader (not global audit reader).
 - UI and backend security tests still required.
+
+## Real CI result and fix
+- First static gate passed; fresh install failed at registry field setup: Odoo 20 forbids restrict ondelete to ir.model. Changed rule model link to cascade (a model that is removed cannot retain a live control rule; test uninstall separately).
+- Scope test tags to this module suite, improve CI failure diagnostics and use explicit PostgreSQL health-check database.
+- Arabic catalog updates for new menus, views, fields, stages and access groups; existing catalog is incomplete and runtime translation import still needs verification.

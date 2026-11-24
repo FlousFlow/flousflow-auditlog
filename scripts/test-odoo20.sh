@@ -8,5 +8,5 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PYTHON="${PYTHON:-python3}"
 "$PYTHON" "$ODOO_SOURCE/odoo-bin" --version
 "$PYTHON" "$ODOO_SOURCE/odoo-bin" --addons-path="$ODOO_SOURCE/addons,$ROOT" \
-    -d "$AUDIT_TEST_DB" --without-demo=all --stop-after-init --test-enable \
+    -d "$AUDIT_TEST_DB" --without-demo=all --stop-after-init --test-enable --test-tags='/flousflow_auditlog,/flousflow_auditlog_sale_control,/flousflow_auditlog_purchase_control,/flousflow_auditlog_account_control,/flousflow_auditlog_stock_control,/flousflow_auditlog_mrp_control' \
     -i flousflow_auditlog,flousflow_auditlog_sale_control,flousflow_auditlog_purchase_control,flousflow_auditlog_account_control,flousflow_auditlog_stock_control,flousflow_auditlog_mrp_control "$@"

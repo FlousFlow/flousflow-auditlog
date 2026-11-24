@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auditlog
+# * flousflow_auditlog
 #
 # Translators:
 # OCA Transbot <transbot@odoo-community.org>, 2016
@@ -20,173 +20,174 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__action_id
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__action_id
 msgid "Action"
 msgstr "الإجراء"
 
-#. module: auditlog
-#: model:ir.ui.menu,name:auditlog.menu_audit
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit
 msgid "Audit"
-msgstr ""
+msgstr "المراجعة"
 
-#. module: auditlog
-#: model:ir.model,name:auditlog.model_auditlog_autovacuum
+#. module: flousflow_auditlog
+#: model:ir.model,name:flousflow_auditlog.model_auditlog_autovacuum
 msgid "Auditlog - Delete old logs"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model,name:auditlog.model_auditlog_http_session
+#. module: flousflow_auditlog
+#: model:ir.model,name:flousflow_auditlog.model_auditlog_http_session
 msgid "Auditlog - HTTP User session log"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model,name:auditlog.model_auditlog_http_request
+#. module: flousflow_auditlog
+#: model:ir.model,name:flousflow_auditlog.model_auditlog_http_request
 msgid "Auditlog - HTTP request log"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model,name:auditlog.model_auditlog_log
+#. module: flousflow_auditlog
+#: model:ir.model,name:flousflow_auditlog.model_auditlog_log
 msgid "Auditlog - Log"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model,name:auditlog.model_auditlog_log_line
-#: model:ir.model,name:auditlog.model_auditlog_log_line_view
+#. module: flousflow_auditlog
+#: model:ir.model,name:flousflow_auditlog.model_auditlog_log_line
+#: model:ir.model,name:flousflow_auditlog.model_auditlog_log_line_view
 msgid "Auditlog - Log details (fields updated)"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model,name:auditlog.model_auditlog_rule
+#. module: flousflow_auditlog
+#: model:ir.model,name:flousflow_auditlog.model_auditlog_rule
 msgid "Auditlog - Rule"
 msgstr ""
 
-#. module: auditlog
-#: model:res.groups,name:auditlog.group_auditlog_manager
+#. module: flousflow_auditlog
+#: model:res.groups,name:flousflow_auditlog.group_auditlog_manager
 msgid "Auditlog Manager"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.module.category,name:auditlog.security_auditlog_groups
+#. module: flousflow_auditlog
+#: model:ir.module.category,name:flousflow_auditlog.security_auditlog_groups
 msgid "Auditlog Rights"
 msgstr ""
 
-#. module: auditlog
-#: model:res.groups,name:auditlog.group_auditlog_user
+#. module: flousflow_auditlog
+#: model:res.groups,name:flousflow_auditlog.group_auditlog_user
 msgid "Auditlog User"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.actions.server,name:auditlog.ir_cron_auditlog_autovacuum_ir_actions_server
+#. module: flousflow_auditlog
+#: model:ir.actions.server,name:flousflow_auditlog.ir_cron_auditlog_autovacuum_ir_actions_server
 msgid "Auto-vacuum audit logs"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__capture_record
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__capture_record
 msgid "Capture Record"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_context
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__user_context
 msgid "Context"
 msgstr "السياق"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__create_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__create_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__create_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__create_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__create_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__create_uid
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_autovacuum__create_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__create_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__create_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__create_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__create_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__create_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__create_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__create_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__create_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__create_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__create_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__create_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__create_date
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_autovacuum__create_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__create_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__create_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__create_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__create_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__create_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__create_date
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_session_search
 msgid "Created on"
 msgstr "أنشئ في"
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
 msgid "Date"
 msgstr "التاريخ"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_description
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__field_description
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__field_description
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__field_description
 msgid "Description"
 msgstr "الوصف"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__display_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__display_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__display_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__display_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__display_name
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_autovacuum__display_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__display_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__display_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__display_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__display_name
 msgid "Display Name"
 msgstr "اسم العرض"
 
-#. module: auditlog
-#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__state__draft
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_rule__state__draft
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_search
 msgid "Draft"
 msgstr "مسوّدة"
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/log.py:0
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_form
 msgid "Exported Records"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_log__log_type__fast
-#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__log_type__fast
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_log__log_type__fast
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_rule__log_type__fast
 msgid "Fast log"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__field_id
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__field_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__field_id
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
 msgid "Field"
 msgstr "الحقل"
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/rule.py:0
 msgid "Field 'model_id' cannot be empty."
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__fields_to_exclude_ids
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__fields_to_exclude_ids
 msgid "Fields to Exclude"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__line_ids
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__line_ids
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_form
 msgid "Fields updated"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_log__log_type__full
-#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__log_type__full
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_log__log_type__full
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_rule__log_type__full
 msgid "Full log"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_type
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__log_type
 msgid ""
 "Full log: make a diff between the data before and after the operation (log "
 "more info like computed fields which were updated, but it is slower)\n"
@@ -194,415 +195,764 @@ msgid ""
 "(less information, but it is faster)"
 msgstr ""
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_session_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_search
 msgid "Group By..."
 msgstr "تجميع حسب..."
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_form
 msgid "HTTP Context"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_request_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__http_request_id
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_form
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__http_request_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__http_request_id
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_form
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
 msgid "HTTP Request"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.actions.act_window,name:auditlog.action_auditlog_http_request_tree
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__http_request_ids
-#: model:ir.ui.menu,name:auditlog.menu_action_auditlog_http_request_tree
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_form
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_http_request_tree
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__http_request_ids
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_action_auditlog_http_request_tree
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_session_form
 msgid "HTTP Requests"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__id
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_autovacuum__id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__id
 msgid "ID"
 msgstr "المعرف"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__write_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__write_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__write_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__write_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__write_uid
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_uid
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_autovacuum__write_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__write_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__write_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__write_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__write_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__write_uid
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_autovacuum__write_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__write_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__write_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__write_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__write_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__write_date
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__write_date
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_autovacuum__write_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__write_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__write_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__write_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__write_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__write_date
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__log_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__log_id
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__log_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__log_id
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_form
 msgid "Log"
 msgstr ""
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_form
 msgid "Log - Field updated"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_create
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__log_create
 msgid "Log Creates"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_unlink
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__log_unlink
 msgid "Log Deletes"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_export_data
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__log_export_data
 msgid "Log Exports"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.actions.act_window,name:auditlog.action_auditlog_line
-#: model:ir.ui.menu,name:auditlog.menu_auditlog_line
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_line
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_auditlog_line
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
 msgid "Log Lines"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_read
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__log_read
 msgid "Log Reads"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_write
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__log_write
 msgid "Log Writes"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.actions.act_window,name:auditlog.action_auditlog_log_tree
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__log_ids
-#: model:ir.ui.menu,name:auditlog.menu_audit_logs
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_form
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_log_tree
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__log_ids
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit_logs
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_form
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
 msgid "Logs"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__method
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__method
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__method
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__method
 msgid "Method"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__model_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_id
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__model_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__model_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__model_id
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
 msgid "Model"
 msgstr "النموذج"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__model_model
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__model_model
 msgid "Model Model"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__model_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_name
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__model_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__model_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__model_name
 msgid "Model Name"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__display_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__display_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__name
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__display_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__display_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__name
 msgid "Name"
 msgstr "الاسم"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__new_value
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__new_value
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__new_value
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__new_value
 msgid "New Value"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__new_value_text
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__new_value_text
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__new_value_text
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__new_value_text
 msgid "New value Text"
 msgstr ""
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/log.py:0
 msgid "No field defined to create line."
 msgstr ""
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/rule.py:0
 msgid "No model defined to create line."
 msgstr ""
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/log.py:0
 msgid "No model defined to create log."
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__old_value
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__old_value
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__old_value
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__old_value
 msgid "Old Value"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__old_value_text
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__old_value_text
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__old_value_text
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__old_value_text
 msgid "Old value Text"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__name
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__name
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_search
 msgid "Path"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__res_id
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__res_id
 msgid "Res"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__res_id
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__res_id
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
 msgid "Resource ID"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__res_ids
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__res_ids
 msgid "Resource IDs"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__name
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__resource_name
 msgid "Resource Name"
-msgstr ""
+msgstr "اسم المستند"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__root_url
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__root_url
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_search
 msgid "Root URL"
 msgstr ""
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_exception__rule_id
 msgid "Rule"
-msgstr ""
+msgstr "القاعدة"
 
-#. module: auditlog
-#: model:ir.actions.act_window,name:auditlog.action_auditlog_rule_tree
-#: model:ir.ui.menu,name:auditlog.menu_action_auditlog_rule_tree
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_rule_tree
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_action_auditlog_rule_tree
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_search
 msgid "Rules"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__model_id
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__model_id
 msgid "Select model for which you want to generate log."
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__capture_record
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__capture_record
 msgid "Select this if you want to keep track of Unlink Record"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_create
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__log_create
 msgid ""
 "Select this if you want to keep track of creation on any record of the model "
 "of this rule"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_unlink
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__log_unlink
 msgid ""
 "Select this if you want to keep track of deletion on any record of the model "
 "of this rule"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_export_data
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__log_export_data
 msgid ""
 "Select this if you want to keep track of exports of the model of this rule"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_write
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__log_write
 msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "model of this rule"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_read
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__log_read
 msgid ""
 "Select this if you want to keep track of read/open on any record of the "
 "model of this rule"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__http_session_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_session_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__http_session_id
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__http_session_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__http_session_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__http_session_id
 msgid "Session"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__name
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__name
 msgid "Session ID"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__state
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__state
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_search
 msgid "State"
 msgstr ""
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
 msgid "Subscribe"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields.selection,name:auditlog.selection__auditlog_rule__state__subscribed
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_rule__state__subscribed
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_search
 msgid "Subscribed"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_model
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_model
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__model_model
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__model_model
 msgid "Technical Model Name"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_name
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__field_name
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line__field_name
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__field_name
 msgid "Technical name"
 msgstr ""
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/log.py:0
 msgid "The field 'field_id' cannot be empty."
 msgstr ""
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/log.py:0
 msgid "The field 'model_id' cannot be empty."
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.constraint,message:auditlog.constraint_auditlog_rule_model_uniq
+#. module: flousflow_auditlog
+#: model:ir.model.constraint,message:flousflow_auditlog.constraint_auditlog_rule_model_uniq
 msgid ""
 "There is already a rule defined on this model\n"
 "You cannot define another: please edit the existing one."
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__log_type
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__log_type
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_type
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__log_type
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__log_type
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__log_type
 msgid "Type"
 msgstr "النوع"
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_form
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_rule_form
 msgid "Unsubscribe"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__user_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__user_id
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line_view__user_id
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_request__user_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_http_session__user_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log__user_id
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_log_line_view__user_id
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_session_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
 msgid "User"
 msgstr "المستخدم"
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_form
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_request_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_session_form
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_line_search
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_search
 msgid "User session"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.actions.act_window,name:auditlog.action_auditlog_http_session_tree
-#: model:ir.ui.menu,name:auditlog.menu_action_auditlog_http_session_tree
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_http_session_tree
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_action_auditlog_http_session_tree
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_http_session_search
 msgid "User sessions"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__user_ids
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__user_ids
 msgid "Users"
 msgstr "المستخدمون"
 
-#. module: auditlog
-#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__users_to_exclude_ids
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_rule__users_to_exclude_ids
 msgid "Users to Exclude"
 msgstr ""
 
-#. module: auditlog
-#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_log_form
 msgid "Values"
 msgstr ""
 
-#. module: auditlog
+#. module: flousflow_auditlog
 #. odoo-python
 #: code:addons/auditlog/models/rule.py:0
 msgid "View logs"
 msgstr ""
 
-#. module: auditlog
-#: model:ir.model.fields,help:auditlog.field_auditlog_rule__user_ids
+#. module: flousflow_auditlog
+#: model:ir.model.fields,help:flousflow_auditlog.field_auditlog_rule__user_ids
 msgid "if no user is added then it will applicable for all users"
 msgstr ""
 
 #~ msgid "Last Modified on"
 #~ msgstr "آخر تعديل في"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit_activity
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_activity
+msgid "Business Activity"
+msgstr "سجل الحركات التجارية"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_audit_logs
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_auditlog_log_tree
+msgid "Technical Logs"
+msgstr "السجلات الفنية"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_attachment_control
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_control_context_form
+msgid "Attachment Control"
+msgstr "الرقابة المستندية"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_attachment_control
+msgid "Attachment Control Rules"
+msgstr "قواعد الرقابة المستندية"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_compliance
+msgid "Document Compliance"
+msgstr "الالتزام المستندي"
+
+#. module: flousflow_auditlog
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_compliance
+msgid "Supporting Document Compliance"
+msgstr "الالتزام بالمستندات المؤيدة"
+
+#. module: flousflow_auditlog
+#: model:ir.ui.menu,name:flousflow_auditlog.menu_attachment_exceptions
+#: model:ir.actions.act_window,name:flousflow_auditlog.action_exceptions
+msgid "Attachment Exceptions"
+msgstr "الاستثناءات المستندية"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__company_id
+msgid "Company"
+msgstr "الشركة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__stage
+msgid "Stage"
+msgstr "مرحلة الرقابة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__minimum_count
+msgid "Minimum Count"
+msgstr "الحد الأدنى للمرفقات"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__protect_evidence
+msgid "Protect Evidence"
+msgstr "حماية المستندات المؤيدة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__allow_exception
+msgid "Allow Exception"
+msgstr "السماح بالاستثناء"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__allowed_mimetypes
+msgid "Allowed Mimetypes"
+msgstr "أنواع الملفات المسموحة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__user_ids
+msgid "Applicable users"
+msgstr "المستخدمون الخاضعون للرقابة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__group_ids
+msgid "Applicable groups"
+msgstr "مجموعات الصلاحيات الخاضعة للرقابة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_rule__active
+msgid "Active"
+msgstr "نشط"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_attachment_rule__stage__confirm
+msgid "Confirmation"
+msgstr "التأكيد"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_attachment_rule__stage__post
+msgid "Posting"
+msgstr "الترحيل"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_attachment_rule__stage__complete
+msgid "Completion"
+msgstr "الإتمام"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_attachment_control_form
+msgid "Apply on"
+msgstr "تطبيق على"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__started_at
+msgid "Started At"
+msgstr "بداية العملية"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__ended_at
+msgid "Ended At"
+msgstr "نهاية العملية"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__event_count
+msgid "Event Count"
+msgstr "عدد الأحداث"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__record_count
+msgid "Record Count"
+msgstr "عدد السجلات"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__model_count
+msgid "Model Count"
+msgstr "عدد النماذج"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__methods
+msgid "Methods"
+msgstr "العمليات الفنية"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__example_document
+msgid "Example Document"
+msgstr "مثال للمستند"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__kind
+msgid "Kind"
+msgstr "نوع الحركة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_activity__activity_key
+msgid "Activity Key"
+msgstr "معرف الحركة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_activity__kind__operation
+msgid "Business operation"
+msgstr "عملية تجارية"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_activity__kind__request
+msgid "HTTP request"
+msgstr "طلب HTTP"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_activity__kind__technical
+msgid "Uncorrelated event"
+msgstr "حدث غير مرتبط"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__rule_name
+msgid "Rule Name"
+msgstr "اسم القاعدة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__rule_version
+msgid "Rule Version"
+msgstr "إصدار القاعدة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__required_count
+msgid "Required Count"
+msgstr "العدد المطلوب"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__actual_count
+msgid "Actual Count"
+msgstr "العدد الفعلي"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__exception_reason
+msgid "Exception Reason"
+msgstr "سبب الاستثناء"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__exception_approver_id
+msgid "Exception Approver"
+msgstr "معتمد الاستثناء"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__evidence_digest
+msgid "Evidence Digest"
+msgstr "البصمة الرقمية للمستندات"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_compliance__status
+msgid "Status"
+msgstr "الحالة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_attachment_compliance__status__compliant
+msgid "Compliant"
+msgstr "ملتزم"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_attachment_compliance__status__exception
+msgid "Authorized exception"
+msgstr "استثناء معتمد"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_exception__resource_id
+msgid "Resource"
+msgstr "معرف المستند"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_exception__actor_id
+msgid "Actor"
+msgstr "المستخدم المنفذ"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_exception__approver_id
+msgid "Approver"
+msgstr "معتمد الاستثناء"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_exception__reason
+msgid "Reason"
+msgstr "سبب الاستثناء"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_exception__expires_at
+msgid "Expires At"
+msgstr "تاريخ انتهاء الصلاحية"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_attachment_exception__consumed_at
+msgid "Consumed At"
+msgstr "تاريخ الاستخدام"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_ir_attachment__ff_audit_evidence
+msgid "Supporting audit evidence"
+msgstr "مستند مؤيد للمراجعة"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_evidence_upload_form
+msgid "Supporting documents"
+msgstr "المستندات المؤيدة"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_evidence_upload_form
+msgid "Upload"
+msgstr "رفع المستند"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_evidence_upload_form
+msgid "Existing attachments"
+msgstr "المرفقات الحالية"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_control_context_form
+msgid "Internal Control"
+msgstr "الرقابة الداخلية"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_control_context_form
+msgid "Audit Tracking"
+msgstr "تتبع الحركات"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_activity_form
+msgid "Technical Details"
+msgstr "التفاصيل الفنية"
+
+#. module: flousflow_auditlog
+#: model_terms:ir.ui.view,arch_db:flousflow_auditlog.view_auditlog_activity_list
+msgid "Details"
+msgstr "التفاصيل"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_control_context__attachment_status
+msgid "Attachment Status"
+msgstr "حالة الرقابة المستندية"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_control_context__audit_status
+msgid "Audit Status"
+msgstr "حالة تتبع الحركات"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields,field_description:flousflow_auditlog.field_auditlog_control_context__document_name
+msgid "Document Name"
+msgstr "المستند"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_control_context__attachment_status__unsupported
+msgid "Unsupported operation"
+msgstr "عملية غير مدعومة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_control_context__attachment_status__active
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_control_context__audit_status__active
+msgid "Active rules"
+msgstr "قواعد نشطة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_control_context__attachment_status__inactive
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_control_context__audit_status__inactive
+msgid "Inactive rules"
+msgstr "قواعد غير نشطة"
+
+#. module: flousflow_auditlog
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_control_context__attachment_status__none
+#: model:ir.model.fields.selection,name:flousflow_auditlog.selection__auditlog_control_context__audit_status__none
+msgid "No rules"
+msgstr "لا توجد قواعد"
+
+#. module: flousflow_auditlog
+#: model:res.groups,name:flousflow_auditlog.group_auditlog_user
+msgid "Global Audit Reader (all companies)"
+msgstr "قارئ المراجعة العام (كل الشركات)"
+
+#. module: flousflow_auditlog
+#: model:res.groups,name:flousflow_auditlog.group_auditlog_manager
+msgid "Global Audit Manager (all companies)"
+msgstr "مدير المراجعة العام (كل الشركات)"
+
+#. module: flousflow_auditlog
+#: model:res.groups,name:flousflow_auditlog.group_document_control_reader
+msgid "Document Control Reader (allowed companies)"
+msgstr "قارئ الرقابة المستندية (الشركات المسموح بها)"
+
+#. module: flousflow_auditlog
+#: model:res.groups,name:flousflow_auditlog.group_document_control_manager
+msgid "Document Control Manager (allowed companies)"
+msgstr "مدير الرقابة المستندية (الشركات المسموح بها)"
+
+#. module: flousflow_auditlog
+#: model:res.groups,name:flousflow_auditlog.group_attachment_exception
+msgid "Attachment Exception Approver"
+msgstr "معتمد الاستثناءات المستندية"

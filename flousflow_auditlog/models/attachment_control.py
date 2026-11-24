@@ -21,7 +21,7 @@ class AuditAttachmentRule(models.Model):
         "res.company", required=True, default=lambda self: self.env.company,
         index=True
     )
-    model_id = fields.Many2one("ir.model", required=True, ondelete="restrict")
+    model_id = fields.Many2one("ir.model", required=True, ondelete="cascade")
     model_name = fields.Char(related="model_id.model", readonly=True)
     stage = fields.Selection(
         [("confirm", "Confirmation"), ("post", "Posting"),

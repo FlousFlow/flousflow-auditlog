@@ -29,7 +29,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U odoo"
+          --health-cmd "pg_isready -U odoo -d postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -61,7 +61,16 @@ jobs:
         env:
           ODOO_SOURCE: ${{ github.workspace }}/upstream-odoo
         run: |
-          python upstream-odoo/odoo-bin --addons-path="$ODOO_SOURCE/addons,$GITHUB_WORKSPACE" -d ff_audit_test_ci --db_host=127.0.0.1 --db_port=5432 --db_user=odoo --db_password=audit_test_only --stop-after-init --test-enable -u flousflow_auditlog,flousflow_auditlog_sale_control,flousflow_auditlog_purchase_control,flousflow_auditlog_account_control,flousflow_auditlog_stock_control,flousflow_auditlog_mrp_control --logfile=odoo-upgrade-test.log
+          python upstream-odoo/odoo-bin --addons-path="$ODOO_SOURCE/addons,$GITHUB_WORKSPACE" -d ff_audit_test_ci --db_host=127.0.0.1 --db_port=5432 --db_user=odoo --db_password=audit_test_only --stop-after-init --test-enable --test-tags='/flousflow_auditlog,/flousflow_auditlog_sale_control,/flousflow_auditlog_purchase_control,/flousflow_auditlog_account_control,/flousflow_auditlog_stock_control,/flousflow_auditlog_mrp_control' -u flousflow_auditlog,flousflow_auditlog_sale_control,flousflow_auditlog_purchase_control,flousflow_auditlog_account_control,flousflow_auditlog_stock_control,flousflow_auditlog_mrp_control --logfile=odoo-upgrade-test.log
+      - name: Print failure diagnostics
+        if: failure()
+        run: |
+          for file in odoo-*-test.log; do
+            if [ -f "$file" ]; then
+              echo "=== $file ==="
+              tail -n 180 "$file"
+            fi
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
