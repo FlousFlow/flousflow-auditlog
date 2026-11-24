@@ -25,6 +25,12 @@
         "views/auditlog_rule_views.xml",
         "views/attachment_control_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "flousflow_auditlog/static/src/js/control_systray.js",
+            "flousflow_auditlog/static/src/xml/control_systray.xml",
+        ],
+    },
     "application": True,
     "installable": True,
 }

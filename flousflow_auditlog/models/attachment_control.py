@@ -48,6 +48,60 @@ class AuditAttachmentRule(models.Model):
                 raise ValidationError(self.env._("No installed enforcement adapter for this operation."))
 
     @api.model
+    def open_contextual_rules(self, model_name, record_id=False, default_move_type=False):
+        if not self.env.user.has_group("flousflow_auditlog.group_auditlog_manager"):
+            raise UserError(self.env._("Only attachment control managers can configure rules."))
+        points = sorted(point[1] for point in self._supported_points()
+                        if point[0] == model_name)
+        if not points:
+            raise UserError(self.env._("This screen has no installed attachment enforcement adapter."))
+        model = self.env["ir.model"].sudo().search([("model", "=", model_name)], limit=1)
+        defaults = {"default_model_id": model.id, "default_company_id": self.env.company.id,
+                    "default_stage": points[0], "active_test": False}
+        domain = [("model_id", "=", model.id), ("company_id", "=", self.env.company.id)]
+        if record_id:
+            record = self.env[model_name].browse(int(record_id)).exists()
+            if record:
+                record.check_access("read")
+                if record.company_id and record.company_id != self.env.company:
+                    raise UserError(self.env._("Switch to the document company before configuring its rules."))
+                if model_name == "account.move":
+                    default_move_type = record.move_type
+        if model_name == "account.move" and default_move_type in {
+            "entry", "out_invoice", "out_refund", "in_invoice", "in_refund",
+            "out_receipt", "in_receipt",
+        }:
+            defaults["default_domain_text"] = repr([("move_type", "=", default_move_type)])
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "flousflow_auditlog.action_attachment_control"
+        )
+        action.update({"domain": domain, "context": defaults, "target": "current"})
+        return action
+
+    @api.model
+    def open_evidence(self, model_name, record_ids):
+        if not self.env.user.has_group("base.group_user"):
+            raise UserError(self.env._("Internal users only."))
+        if not any(point[0] == model_name for point in self._supported_points()):
+            raise UserError(self.env._("Unsupported evidence document."))
+        record = self.env[model_name].browse(record_ids).exists()
+        record.ensure_one()
+        record.check_access("write")
+        view = self.env.ref("flousflow_auditlog.view_supporting_evidence_list")
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.env._("Supporting documents"),
+            "res_model": "ir.attachment",
+            "views": [(view.id, "list")],
+            "domain": [
+                ("res_model", "=", model_name), ("res_id", "=", record.id),
+                ("res_field", "=", False), ("type", "=", "binary"),
+                ("file_size", ">", 0),
+            ],
+            "target": "current",
+        }
+
+    @api.model
     def _check_attachments(self, records, stage):
         """Called from an installed server-side lifecycle adapter."""
         if not records:

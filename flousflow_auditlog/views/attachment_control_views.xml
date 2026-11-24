@@ -49,4 +49,16 @@
     <menuitem id="menu_attachment_control" name="Attachment Control"
               parent="menu_audit" action="action_attachment_control"
               groups="flousflow_auditlog.group_auditlog_manager" sequence="25"/>
+    <record id="view_supporting_evidence_list" model="ir.ui.view">
+        <field name="name">ir.attachment.supporting.evidence.list</field>
+        <field name="model">ir.attachment</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="false" delete="false">
+                <field name="name" readonly="1"/>
+                <field name="mimetype" readonly="1"/>
+                <field name="file_size" readonly="1"/>
+                <field name="ff_audit_evidence"/>
+            </list>
+        </field>
+    </record>
 </odoo>
