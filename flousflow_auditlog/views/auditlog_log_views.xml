@@ -22,6 +22,7 @@
                             <field name="user_id" readonly="1" />
                             <field name="method" readonly="1" />
                             <field name="log_type" readonly="1" />
+                            <field name="activity_key" readonly="1" />
                         </group>
                         <group colspan="1">
                             <field name="model_id" readonly="1" />
@@ -86,6 +87,7 @@
         <field name="arch" type="xml">
             <list create="false">
                 <field name="create_date" />
+                <field name="activity_key" optional="hide" />
                 <field name="name" />
                 <field name="model_id" />
                 <field name="res_id" />
@@ -104,6 +106,7 @@
                 <field name="res_id" />
                 <field name="user_id" />
                 <group>
+                    <filter name="group_by_activity" string="Activity" domain="[]" context="{'group_by':'activity_key'}" />
                     <filter
                         name="group_by_user_id"
                         string="User"
@@ -145,7 +148,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auditlog_log_tree">
-        <field name="name">Logs</field>
+        <field name="name">Technical Logs</field>
         <field name="res_model">auditlog.log</field>
         <field name="search_view_id" ref="view_auditlog_log_search" />
     </record>
@@ -156,4 +159,13 @@
         action="action_auditlog_log_tree"
         sequence="20"
     />
+    <record model="ir.actions.act_window" id="action_auditlog_activity">
+        <field name="name">Business Activity (Grouped)</field>
+        <field name="res_model">auditlog.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_auditlog_log_search"/>
+        <field name="context">{'search_default_group_by_activity': 1}</field>
+    </record>
+    <menuitem id="menu_audit_activity" name="Business Activity"
+              parent="menu_audit" action="action_auditlog_activity" sequence="10"/>
 </odoo>

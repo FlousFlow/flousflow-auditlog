@@ -4,6 +4,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
+from .operation_scope import current_operation
+
 
 class AuditlogLog(models.Model):
     _name = "auditlog.log"
@@ -31,10 +33,28 @@ class AuditlogLog(models.Model):
         [("full", "Full log"), ("fast", "Fast log")], string="Type"
     )
 
+    operation_key = fields.Char(readonly=True, copy=False, index=True)
+    activity_key = fields.Char(
+        string="Activity", compute="_compute_activity_key", store=True, index=True
+    )
+
+    @api.depends("operation_key", "http_request_id", "user_id")
+    def _compute_activity_key(self):
+        for log in self:
+            if log.operation_key:
+                log.activity_key = log.operation_key
+            elif log.http_request_id:
+                log.activity_key = "HTTP #%s / User #%s" % (
+                    log.http_request_id.id, log.user_id.id or 0
+                )
+            else:
+                log.activity_key = "Log #%s" % log.id
+
     @api.model_create_multi
     def create(self, vals_list):
         """Insert model_name and model_model field values upon creation."""
         for vals in vals_list:
+            vals["operation_key"] = current_operation() or False
             if not vals.get("model_id"):
                 raise UserError(self.env._("No model defined to create log."))
             model = self.env["ir.model"].sudo().browse(vals["model_id"])

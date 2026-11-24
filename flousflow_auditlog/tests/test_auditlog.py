@@ -687,7 +687,7 @@ class AuditLogRuleTestForUserModel(AuditLogRuleCommon):
                 }
             )
         )
-        cls.group = cls.env.ref("auditlog.group_auditlog_manager")
+        cls.group = cls.env.ref("flousflow_auditlog.group_auditlog_manager")
 
         cls.auditlog_log = cls.env["auditlog.log"]
         # Subscribe auditlog.rule

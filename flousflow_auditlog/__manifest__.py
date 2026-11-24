@@ -4,7 +4,7 @@
 
 {
     "name": "Flous Flow Audit Log",
-    "version": "19.0.2.0.1",
+    "version": "20.0.1.0.0",
     "author": "Flous Flow (integration), ABF OSIELL, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "website": "https://flousflow.com",
@@ -12,7 +12,7 @@
     "summary": "Track who created, read, changed, or deleted Odoo records",
     "images": ["static/description/logs.png"],
     "category": "Tools",
-    "depends": ["base"],
+    "depends": ["base", "web"],
     "data": [
         "security/res_groups.xml",
         "security/ir.model.access.csv",
@@ -23,6 +23,7 @@
         "views/auditlog_log_line_views.xml",
         "views/auditlog_log_views.xml",
         "views/auditlog_rule_views.xml",
+        "views/attachment_control_views.xml",
     ],
     "application": True,
     "installable": True,
