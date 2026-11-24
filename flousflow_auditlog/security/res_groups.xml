@@ -9,17 +9,27 @@
         <field name="sequence">99</field>
     </record>
 
+    <record model="res.groups" id="group_document_control_reader">
+        <field name="name">Document Control Reader (allowed companies)</field>
+        <field name="privilege_id" ref="res_groups_privilege_auditlog"/>
+    </record>
+    <record model="res.groups" id="group_document_control_manager">
+        <field name="name">Document Control Manager (allowed companies)</field>
+        <field name="privilege_id" ref="res_groups_privilege_auditlog"/>
+        <field name="implied_ids" eval="[Command.link(ref('flousflow_auditlog.group_document_control_reader'))]"/>
+    </record>
     <record model="res.groups" id="group_auditlog_user">
-        <field name="name">Auditlog User</field>
+        <field name="name">Global Audit Reader (all companies)</field>
         <field name="privilege_id" ref="res_groups_privilege_auditlog" />
+        <field name="implied_ids" eval="[Command.link(ref('flousflow_auditlog.group_document_control_reader'))]"/>
     </record>
 
     <record model="res.groups" id="group_auditlog_manager">
-        <field name="name">Auditlog Manager</field>
+        <field name="name">Global Audit Manager (all companies)</field>
         <field name="privilege_id" ref="res_groups_privilege_auditlog" />
         <field
             name="implied_ids"
-            eval="[Command.link(ref('flousflow_auditlog.group_auditlog_user'))]"
+            eval="[Command.link(ref('flousflow_auditlog.group_auditlog_user')), Command.link(ref('flousflow_auditlog.group_document_control_manager'))]"
         />
     </record>
 

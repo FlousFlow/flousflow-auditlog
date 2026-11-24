@@ -158,7 +158,7 @@
         parent="menu_audit"
         action="action_auditlog_log_tree"
         sequence="20"
-    />
+     groups="flousflow_auditlog.group_auditlog_user" />
     <record id="view_auditlog_activity_list" model="ir.ui.view">
         <field name="name">auditlog.activity.list</field>
         <field name="model">auditlog.activity</field>

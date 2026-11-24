@@ -65,5 +65,5 @@
         parent="menu_audit"
         action="action_auditlog_http_session_tree"
         sequence="40"
-    />
+     groups="flousflow_auditlog.group_auditlog_user" />
 </odoo>

@@ -87,5 +87,5 @@
         parent="menu_audit"
         action="action_auditlog_http_request_tree"
         sequence="50"
-    />
+     groups="flousflow_auditlog.group_auditlog_user" />
 </odoo>

@@ -49,3 +49,9 @@ Added regression tests for protected evidence, snapshot immutability, and duplic
 
 ## Automated quality gate configuration
 - Added static manifest, Python syntax, XML and ACL checks, and a GitHub Actions workflow for fresh installation and same-version upgrade against pinned Odoo 20 and PostgreSQL 16. This is not a tested migration from 19 databases. Workflow results must be inspected before release. Integration tests do not yet cover every required security, concurrency, UX or performance case.
+
+## Security boundary follow-up
+- Global technical audit is deliberately restricted to explicitly named all-company audit roles. A separate company-scoped document reader/manager and exception approver can access document rules and compliance without global raw logs. Existing global audit role membership retains its all-company scope. Review current users before deploying, particularly accounts previously assigned global reader through exception role.
+- Technical log ACLs are read-only for managers; retention is still a separately authorized purge method. Global audit administrators/server operators are not a tamper-proof adversary boundary.
+- Company consistency and MIME filters for supporting evidence; rule revision UUID invalidates previously issued exception grants after a rule edit (including same-second edits).
+- No claim of record-level partitioning of raw technical logs: arbitrary model fields may contain another company's data, so use scoped roles for branch users. Runtime verification pending.

@@ -93,5 +93,5 @@
         parent="menu_audit"
         action="action_auditlog_line"
         sequence="30"
-    />
+     groups="flousflow_auditlog.group_auditlog_user" />
 </odoo>

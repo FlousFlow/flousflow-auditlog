@@ -14,7 +14,7 @@ class AttachmentControlSystray extends Component {
         this.notification = useService("notification");
         this.state = useState({ allowed: false, busy: false });
         onWillStart(async () => {
-            this.state.allowed = await user.hasGroup("flousflow_auditlog.group_auditlog_manager");
+            this.state.allowed = await user.hasGroup("flousflow_auditlog.group_document_control_manager");
         });
     }
 

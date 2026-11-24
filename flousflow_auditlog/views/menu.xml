@@ -5,6 +5,6 @@
         name="Audit"
         parent="base.menu_custom"
         sequence="50"
-        groups="flousflow_auditlog.group_auditlog_user"
+        groups="flousflow_auditlog.group_auditlog_user,flousflow_auditlog.group_document_control_reader"
     />
 </odoo>

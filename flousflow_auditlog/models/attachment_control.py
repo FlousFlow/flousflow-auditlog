@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later.
 from ast import literal_eval
 from datetime import timedelta
+from uuid import uuid4
 
 from odoo import api, fields, models, Command
 from odoo.tools import SQL
@@ -27,10 +28,21 @@ class AuditAttachmentRule(models.Model):
     )
     domain_text = fields.Char(default="[]", required=True)
     minimum_count = fields.Integer(default=1, required=True)
+    revision = fields.Char(default=lambda self: uuid4().hex, readonly=True, copy=False)
     allow_exception = fields.Boolean(default=False)
+    allowed_mimetypes = fields.Char(help="Comma-separated exact MIME types; blank permits any binary file.")
     protect_evidence = fields.Boolean(default=True, help="Preserve files used as evidence after completion.")
     user_ids = fields.Many2many("res.users", string="Applicable users")
     group_ids = fields.Many2many("res.groups", string="Applicable groups")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["revision"] = uuid4().hex
+        return super().create(vals_list)
+
+    def write(self, vals):
+        return super().write(dict(vals, revision=uuid4().hex))
 
     @api.model
     def _supported_points(self):
@@ -54,7 +66,7 @@ class AuditAttachmentRule(models.Model):
 
     @api.model
     def open_contextual_rules(self, model_name, record_id=False, default_move_type=False, picking_type_id=False, payment_type=False):
-        if not self.env.user.has_group("flousflow_auditlog.group_auditlog_manager"):
+        if not self.env.user.has_group("flousflow_auditlog.group_document_control_manager"):
             raise UserError(self.env._("Only attachment control managers can configure rules."))
         points = sorted(point[1] for point in self._supported_points()
                         if point[0] == model_name)
@@ -151,16 +163,21 @@ class AuditAttachmentRule(models.Model):
                     ("res_field", "=", False), ("type", "=", "binary"),
                     ("file_size", ">", 0), ("checksum", "!=", False),
                     ("ff_audit_evidence", "=", True),
+                    ("company_id", "in", [False, record.company_id.id]),
                 ])
                 if capture and evidence:
                     evidence._ff_lock_evidence()
                     evidence.invalidate_recordset(["checksum", "file_size", "res_model", "res_id",
-                                                   "res_field", "type", "ff_audit_evidence"])
+                                                   "res_field", "type", "ff_audit_evidence", "company_id", "mimetype"])
                     evidence = evidence.exists().filtered(lambda att:
                         att.res_model == record._name and att.res_id == record.id
                         and not att.res_field and att.type == "binary" and att.file_size > 0
                         and att.checksum and att.ff_audit_evidence
+                        and (not att.company_id or att.company_id == record.company_id)
                     )
+                allowed_mimes = {mime.strip().lower() for mime in (rule.allowed_mimetypes or "").split(",") if mime.strip()}
+                if allowed_mimes:
+                    evidence = evidence.filtered(lambda att: (att.mimetype or "").lower() in allowed_mimes)
                 if record._name == "stock.quant":
                     previous = self.env["auditlog.attachment.compliance"].sudo().search([
                         ("model_name", "=", record._name), ("resource_id", "=", record.id),
@@ -189,6 +206,8 @@ class AuditAttachmentRule(models.Model):
                         "rule_name": rule.name,
                         "rule_id": rule.id,
                         "rule_domain": rule.domain_text,
+                        "rule_version": rule.revision,
+                        "allowed_mimetypes": rule.allowed_mimetypes,
                         "stage": stage,
                         "user_id": actor.id,
                         "operation_key": current_operation() or False,
@@ -218,6 +237,8 @@ class AuditAttachmentCompliance(models.Model):
     rule_id = fields.Many2one("auditlog.attachment.rule", ondelete="set null")
     rule_name = fields.Char(required=True)
     rule_domain = fields.Char()
+    rule_version = fields.Char()
+    allowed_mimetypes = fields.Char()
     stage = fields.Char(required=True)
     user_id = fields.Many2one("res.users")
     operation_key = fields.Char(index=True, readonly=True)
@@ -318,6 +339,7 @@ class AuditAttachmentException(models.Model):
     reason = fields.Text(required=True)
     expires_at = fields.Datetime(required=True, default=lambda self: fields.Datetime.now() + timedelta(hours=24))
     rule_revision = fields.Datetime(readonly=True)
+    rule_version = fields.Char(readonly=True)
     consumed_at = fields.Datetime(readonly=True)
 
     @api.model_create_multi
@@ -348,6 +370,7 @@ class AuditAttachmentException(models.Model):
                 raise UserError(self.env._("Expiry must be within the next seven days."))
             vals.update(company_id=rule.company_id.id, resource_name=record.display_name,
                         approver_id=self.env.uid, rule_revision=rule.write_date,
+                        rule_version=rule.revision,
                         consumed_at=False, expires_at=expiry)
         return super().create(vals_list)
 
@@ -360,12 +383,12 @@ class AuditAttachmentException(models.Model):
 
     @api.model
     def _consume(self, rule, record, actor):
-        if not rule.allow_exception:
+        if not rule.allow_exception or not rule.revision:
             return self.browse()
         grants = self.sudo().search([
             ("rule_id", "=", rule.id), ("company_id", "=", record.company_id.id),
             ("resource_id", "=", record.id), ("actor_id", "=", actor.id),
-            ("rule_revision", "=", rule.write_date), ("consumed_at", "=", False),
+            ("rule_version", "=", rule.revision), ("consumed_at", "=", False),
             ("expires_at", ">", fields.Datetime.now()),
         ], order="id")
         for grant in grants:
