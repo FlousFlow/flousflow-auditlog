@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="action_auditlog_home" model="ir.actions.act_window">
-        <field name="name">Activity Feed / نشاط العمليات</field>
-        <field name="res_model">auditlog.activity</field>
-        <field name="view_mode">list,form</field>
-    </record>
     <menuitem
         id="menu_audit"
         name="الرقابة الداخلية"
-        action="action_auditlog_home"
         sequence="50"
         groups="flousflow_auditlog.group_auditlog_user,flousflow_auditlog.group_document_control_reader"
+        web_icon="flousflow_auditlog,static/description/icon.png"
     />
     <menuitem id="menu_audit_monitoring" name="المتابعة"
               parent="menu_audit" sequence="10"
@@ -23,5 +18,6 @@
               groups="flousflow_auditlog.group_attachment_exception"/>
     <record id="menu_audit" model="ir.ui.menu">
         <field name="parent_id" eval="False"/>
+        <field name="action" eval="False"/>
     </record>
 </odoo>
