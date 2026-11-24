@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
         with audit_operation(self.env._("Confirm sales order")):
             result = super().write(vals)
             completed = transitioning.filtered(lambda rec: rec.state == "sale")
-            self.env["auditlog.attachment.rule"]._check_attachments(completed, "confirm")
+            self.env["auditlog.attachment.rule"]._check_attachments(completed, "confirm", capture=True)
             return result
 
     @api.model_create_multi
@@ -37,5 +37,5 @@ class SaleOrder(models.Model):
         records = super().create(vals_list)
         completed = records.filtered(lambda rec: rec.state == "sale")
         if completed:
-            self.env["auditlog.attachment.rule"]._check_attachments(completed, "confirm")
+            self.env["auditlog.attachment.rule"]._check_attachments(completed, "confirm", capture=True)
         return records

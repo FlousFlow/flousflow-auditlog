@@ -18,3 +18,10 @@ Odoo upstream source inspected: d2a79d46ca412077759b0d4fb5caa0ffbfec3bd5.
 - No inventory/manufacturing/payment adapters yet. No cross-request business correlation, business summary rows, complete translations, deletion/reassignment protection, secure provenance classification, compliance snapshots, exception flow, reporting or audit retention upgrade yet.
 - Existing OCA-based technical logs and permissions are preserved; additional hardening needed.
 - Do not publish or deploy this WIP branch as a production release.
+
+## Third development increment
+- Stock picking completion, manufacturing confirmation/completion and unbuild completion adapters use inspected Odoo 20 lifecycle methods; backorder/wizard paths and direct stock moves still require runtime coverage.
+- Add read-only per-rule compliance snapshots (including file hashes), company-scoped report, default-on strict protection of all designated evidence used in successful checks. Protection persists if the rule is disabled; no replacement/unlock workflow yet.
+- Serialize evidence verification and mutation with attachment-row locks; concurrency and rollback tests are still required. No guarantee against direct SQL or administrator-level code.
+- Contextual defaults now support exact picking operation type when known. Generic listing may still need manual domain selection.
+- Original release blockers above remain except where implemented here. Payment, scrap, adjustment, exception and secure upload provenance remain pending. No production readiness claim.

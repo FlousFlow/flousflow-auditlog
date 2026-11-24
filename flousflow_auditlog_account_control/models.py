@@ -29,7 +29,7 @@ class AccountMove(models.Model):
         with audit_operation(self.env._("Post accounting document")):
             result = super().write(vals)
             completed = transitioning.filtered(lambda rec: rec.state == "posted")
-            self.env["auditlog.attachment.rule"]._check_attachments(completed, "post")
+            self.env["auditlog.attachment.rule"]._check_attachments(completed, "post", capture=True)
             return result
 
     @api.model_create_multi
@@ -37,5 +37,5 @@ class AccountMove(models.Model):
         records = super().create(vals_list)
         completed = records.filtered(lambda rec: rec.state == "posted")
         if completed:
-            self.env["auditlog.attachment.rule"]._check_attachments(completed, "post")
+            self.env["auditlog.attachment.rule"]._check_attachments(completed, "post", capture=True)
         return records

@@ -2,7 +2,8 @@
 # License AGPL-3.0 or later.
 from ast import literal_eval
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
+from odoo.tools import SQL
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -24,6 +25,7 @@ class AuditAttachmentRule(models.Model):
     )
     domain_text = fields.Char(default="[]", required=True)
     minimum_count = fields.Integer(default=1, required=True)
+    protect_evidence = fields.Boolean(default=True, help="Preserve files used as evidence after completion.")
     user_ids = fields.Many2many("res.users", string="Applicable users")
     group_ids = fields.Many2many("res.groups", string="Applicable groups")
 
@@ -48,7 +50,7 @@ class AuditAttachmentRule(models.Model):
                 raise ValidationError(self.env._("No installed enforcement adapter for this operation."))
 
     @api.model
-    def open_contextual_rules(self, model_name, record_id=False, default_move_type=False):
+    def open_contextual_rules(self, model_name, record_id=False, default_move_type=False, picking_type_id=False, payment_type=False):
         if not self.env.user.has_group("flousflow_auditlog.group_auditlog_manager"):
             raise UserError(self.env._("Only attachment control managers can configure rules."))
         points = sorted(point[1] for point in self._supported_points()
@@ -67,11 +69,23 @@ class AuditAttachmentRule(models.Model):
                     raise UserError(self.env._("Switch to the document company before configuring its rules."))
                 if model_name == "account.move":
                     default_move_type = record.move_type
+                elif model_name == "stock.picking":
+                    picking_type_id = record.picking_type_id.id
+                elif model_name == "account.payment":
+                    payment_type = record.payment_type
         if model_name == "account.move" and default_move_type in {
             "entry", "out_invoice", "out_refund", "in_invoice", "in_refund",
             "out_receipt", "in_receipt",
         }:
             defaults["default_domain_text"] = repr([("move_type", "=", default_move_type)])
+        if model_name == "stock.picking" and picking_type_id:
+            picking_type = self.env["stock.picking.type"].browse(int(picking_type_id)).exists()
+            if picking_type:
+                picking_type.check_access("read")
+                if picking_type.company_id == self.env.company:
+                    defaults["default_domain_text"] = repr([("picking_type_id", "=", picking_type.id)])
+        if model_name == "account.payment" and payment_type in {"inbound", "outbound"}:
+            defaults["default_domain_text"] = repr([("payment_type", "=", payment_type)])
         action = self.env["ir.actions.actions"]._for_xml_id(
             "flousflow_auditlog.action_attachment_control"
         )
@@ -102,7 +116,7 @@ class AuditAttachmentRule(models.Model):
         }
 
     @api.model
-    def _check_attachments(self, records, stage):
+    def _check_attachments(self, records, stage, capture=False):
         """Called from an installed server-side lifecycle adapter."""
         if not records:
             return
@@ -133,6 +147,15 @@ class AuditAttachmentRule(models.Model):
                     ("file_size", ">", 0), ("checksum", "!=", False),
                     ("ff_audit_evidence", "=", True),
                 ])
+                if capture and evidence:
+                    evidence._ff_lock_evidence()
+                    evidence.invalidate_recordset(["checksum", "file_size", "res_model", "res_id",
+                                                   "res_field", "type", "ff_audit_evidence"])
+                    evidence = evidence.exists().filtered(lambda att:
+                        att.res_model == record._name and att.res_id == record.id
+                        and not att.res_field and att.type == "binary" and att.file_size > 0
+                        and att.checksum and att.ff_audit_evidence
+                    )
                 count = len(set(evidence.mapped("checksum")))
                 if count < rule.minimum_count:
                     raise UserError(self.env._(
@@ -140,6 +163,60 @@ class AuditAttachmentRule(models.Model):
                         document=record.display_name, rule=rule.name,
                         required=rule.minimum_count, actual=count,
                     ))
+
+                if capture:
+                    self.env["auditlog.attachment.compliance"].sudo().create({
+                        "company_id": record.company_id.id,
+                        "model_name": record._name,
+                        "resource_id": record.id,
+                        "resource_name": record.display_name,
+                        "rule_name": rule.name,
+                        "rule_id": rule.id,
+                        "rule_domain": rule.domain_text,
+                        "stage": stage,
+                        "user_id": actor.id,
+                        "required_count": rule.minimum_count,
+                        "actual_count": count,
+                        "protect_evidence": rule.protect_evidence,
+                        "evidence_ids": [Command.set(evidence.ids)],
+                        "evidence_digest": "\n".join(sorted(set(evidence.mapped("checksum")))),
+                    })
+                    if rule.protect_evidence:
+                        evidence._ff_protect_evidence()
+
+
+class AuditAttachmentCompliance(models.Model):
+    _name = "auditlog.attachment.compliance"
+    _description = "Supporting Document Compliance"
+    _order = "create_date desc, id desc"
+
+    company_id = fields.Many2one("res.company", required=True, index=True)
+    model_name = fields.Char(required=True)
+    resource_id = fields.Integer(required=True)
+    resource_name = fields.Char()
+    rule_id = fields.Many2one("auditlog.attachment.rule", ondelete="set null")
+    rule_name = fields.Char(required=True)
+    rule_domain = fields.Char()
+    stage = fields.Char(required=True)
+    user_id = fields.Many2one("res.users")
+    required_count = fields.Integer()
+    actual_count = fields.Integer()
+    protect_evidence = fields.Boolean()
+    evidence_ids = fields.Many2many("ir.attachment")
+    evidence_digest = fields.Text()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not self.env.su:
+            raise UserError(self.env._("Compliance records are created by the control engine."))
+        return super().create(vals_list)
+
+    def write(self, vals):
+        raise UserError(self.env._("Compliance records cannot be changed."))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_uninstall(self):
+        raise UserError(self.env._("Compliance records cannot be deleted."))
 
 
 class IrAttachment(models.Model):
@@ -155,3 +232,44 @@ class IrAttachment(models.Model):
         for att in self.filtered("ff_audit_evidence"):
             if att.type != "binary" or att.file_size <= 0 or not att.res_model or not att.res_id:
                 raise ValidationError(self.env._("Supporting evidence must be a non-empty file linked to a document."))
+
+    ff_audit_protected = fields.Boolean(default=False, copy=False, readonly=True, index=True)
+
+    def _ff_lock_evidence(self):
+        if self:
+            self.flush_recordset()
+            self.env.cr.execute(SQL(
+                "SELECT id FROM %s WHERE id IN %s ORDER BY id FOR UPDATE",
+                SQL.identifier(self._table), tuple(self.ids),
+            ))
+
+    def _ff_protect_evidence(self):
+        super(IrAttachment, self.sudo()).write({"ff_audit_protected": True})
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if any("ff_audit_protected" in vals for vals in vals_list):
+            raise UserError(self.env._("Audit protection is managed by the control engine."))
+        return super().create(vals_list)
+
+    def _ff_check_protected(self):
+        self._ff_lock_evidence()
+        self.invalidate_recordset(["ff_audit_protected"])
+        if any(self.sudo().mapped("ff_audit_protected")):
+            raise UserError(self.env._("Supporting evidence used in an approved transaction cannot be modified or removed."))
+
+    def write(self, vals):
+        if "ff_audit_protected" in vals:
+            raise UserError(self.env._("Audit protection is managed by the control engine."))
+        sensitive = {"raw", "datas", "db_datas", "store_fname", "checksum", "file_size",
+                     "res_model", "res_id", "res_field", "type", "url", "mimetype",
+                     "name", "company_id", "ff_audit_evidence", "public", "access_token"}
+        if sensitive.intersection(vals):
+            self.check_access("write")
+            self._ff_check_protected()
+        return super().write(vals)
+
+    def unlink(self):
+        self.check_access("unlink")
+        self._ff_check_protected()
+        return super().unlink()
