@@ -29,6 +29,7 @@
                         <field name="active"/>
                         <field name="minimum_count"/>
                 <field name="protect_evidence"/>
+                        <field name="allow_exception"/>
                         <field name="domain_text"/>
                         <field name="user_ids" widget="many2many_tags"/>
                         <field name="group_ids" widget="many2many_tags"/>
@@ -75,7 +76,7 @@
             <list create="false" edit="false" delete="false">
                 <field name="create_date"/><field name="resource_name"/>
                 <field name="model_name"/><field name="company_id"/>
-                <field name="rule_name"/><field name="stage"/><field name="user_id"/>
+                <field name="status"/><field name="rule_name"/><field name="stage"/><field name="user_id"/>
                 <field name="required_count"/><field name="actual_count"/>
                 <field name="protect_evidence"/>
             </list>
@@ -91,7 +92,7 @@
                 <field name="company_id"/><field name="rule_name"/><field name="rule_domain"/>
                 <field name="stage"/><field name="user_id"/><field name="required_count"/>
                 <field name="actual_count"/><field name="protect_evidence"/>
-                <field name="evidence_digest"/>
+                <field name="status"/><field name="exception_reason"/><field name="exception_approver_id"/><field name="evidence_digest"/>
             </group></sheet></form>
         </field>
     </record>
@@ -103,4 +104,38 @@
     <menuitem id="menu_compliance" name="Document Compliance"
               parent="menu_audit" action="action_compliance"
               groups="flousflow_auditlog.group_auditlog_user" sequence="26"/>
+    <record id="exception_company" model="ir.rule">
+        <field name="name">Exception company scope</field>
+        <field name="model_id" ref="model_auditlog_attachment_exception"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="view_exception_list" model="ir.ui.view">
+        <field name="name">auditlog.attachment.exception.list</field>
+        <field name="model">auditlog.attachment.exception</field>
+        <field name="arch" type="xml">
+            <list edit="false" delete="false">
+                <field name="rule_id"/><field name="resource_name"/><field name="actor_id"/>
+                <field name="approver_id"/><field name="expires_at"/><field name="consumed_at"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_exception_form" model="ir.ui.view">
+        <field name="name">auditlog.attachment.exception.form</field>
+        <field name="model">auditlog.attachment.exception</field>
+        <field name="arch" type="xml">
+            <form edit="false" delete="false"><sheet><group>
+                <field name="rule_id" domain="[('active','=',True),('allow_exception','=',True)]"/>
+                <field name="resource_id"/><field name="resource_name"/>
+                <field name="actor_id"/><field name="reason"/><field name="expires_at"/>
+                <field name="company_id"/><field name="approver_id"/><field name="consumed_at"/>
+            </group></sheet></form>
+        </field>
+    </record>
+    <record id="action_exceptions" model="ir.actions.act_window">
+        <field name="name">Attachment Exceptions</field>
+        <field name="res_model">auditlog.attachment.exception</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_attachment_exceptions" name="Attachment Exceptions" parent="menu_audit"
+              action="action_exceptions" groups="flousflow_auditlog.group_attachment_exception" sequence="27"/>
 </odoo>

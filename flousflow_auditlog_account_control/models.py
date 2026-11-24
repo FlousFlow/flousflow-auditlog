@@ -10,7 +10,7 @@ class AuditAttachmentRule(models.Model):
 
     @api.model
     def _supported_points(self):
-        return super()._supported_points() | {("account.move", "post")}
+        return super()._supported_points() | {("account.move", "post"), ("account.payment", "post")}
 
 
 class AccountMove(models.Model):
@@ -38,4 +38,35 @@ class AccountMove(models.Model):
         completed = records.filtered(lambda rec: rec.state == "posted")
         if completed:
             self.env["auditlog.attachment.rule"]._check_attachments(completed, "post", capture=True)
+        return records
+
+
+class AccountPayment(models.Model):
+    _inherit = "account.payment"
+
+    def action_post(self):
+        with audit_operation(self.env._("Confirm payment")):
+            return super().action_post()
+
+    def write(self, vals):
+        if vals.get("state") not in ("paid", "reconciled"):
+            return super().write(vals)
+        pending = self.filtered(lambda payment: payment.state not in ("paid", "reconciled"))
+        if not pending:
+            return super().write(vals)
+        with audit_operation(self.env._("Confirm payment")):
+            result = super().write(vals)
+            self.env["auditlog.attachment.rule"]._check_attachments(
+                pending.filtered(lambda payment: payment.state in ("paid", "reconciled")),
+                "post", capture=True
+            )
+            return result
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        self.env["auditlog.attachment.rule"]._check_attachments(
+            records.filtered(lambda payment: payment.state in ("paid", "reconciled")),
+            "post", capture=True
+        )
         return records

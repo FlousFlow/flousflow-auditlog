@@ -1,6 +1,7 @@
 # Copyright 2026 Flous Flow
 # License AGPL-3.0 or later.
 from ast import literal_eval
+from datetime import timedelta
 
 from odoo import api, fields, models, Command
 from odoo.tools import SQL
@@ -25,6 +26,7 @@ class AuditAttachmentRule(models.Model):
     )
     domain_text = fields.Char(default="[]", required=True)
     minimum_count = fields.Integer(default=1, required=True)
+    allow_exception = fields.Boolean(default=False)
     protect_evidence = fields.Boolean(default=True, help="Preserve files used as evidence after completion.")
     user_ids = fields.Many2many("res.users", string="Applicable users")
     group_ids = fields.Many2many("res.groups", string="Applicable groups")
@@ -84,6 +86,8 @@ class AuditAttachmentRule(models.Model):
                 picking_type.check_access("read")
                 if picking_type.company_id == self.env.company:
                     defaults["default_domain_text"] = repr([("picking_type_id", "=", picking_type.id)])
+        if model_name == "stock.move":
+            defaults["default_domain_text"] = repr([("is_scrap", "=", True)])
         if model_name == "account.payment" and payment_type in {"inbound", "outbound"}:
             defaults["default_domain_text"] = repr([("payment_type", "=", payment_type)])
         action = self.env["ir.actions.actions"]._for_xml_id(
@@ -156,8 +160,18 @@ class AuditAttachmentRule(models.Model):
                         and not att.res_field and att.type == "binary" and att.file_size > 0
                         and att.checksum and att.ff_audit_evidence
                     )
+                if record._name == "stock.quant":
+                    previous = self.env["auditlog.attachment.compliance"].sudo().search([
+                        ("model_name", "=", record._name), ("resource_id", "=", record.id),
+                        ("stage", "=", stage), ("company_id", "=", record.company_id.id),
+                    ])
+                    used = {digest for row in previous for digest in (row.evidence_digest or "").splitlines()}
+                    evidence = evidence.filtered(lambda att: att.checksum not in used)
                 count = len(set(evidence.mapped("checksum")))
-                if count < rule.minimum_count:
+                grant = self.env["auditlog.attachment.exception"]
+                if count < rule.minimum_count and capture and rule.allow_exception:
+                    grant = grant._consume(rule, record, actor)
+                if count < rule.minimum_count and not grant:
                     raise UserError(self.env._(
                         "%(document)s: %(rule)s requires %(required)s supporting file(s); %(actual)s found.",
                         document=record.display_name, rule=rule.name,
@@ -175,6 +189,10 @@ class AuditAttachmentRule(models.Model):
                         "rule_domain": rule.domain_text,
                         "stage": stage,
                         "user_id": actor.id,
+                        "status": "exception" if grant else "compliant",
+                        "exception_id": grant.id if grant else False,
+                        "exception_reason": grant.reason if grant else False,
+                        "exception_approver_id": grant.approver_id.id if grant else False,
                         "required_count": rule.minimum_count,
                         "actual_count": count,
                         "protect_evidence": rule.protect_evidence,
@@ -199,6 +217,10 @@ class AuditAttachmentCompliance(models.Model):
     rule_domain = fields.Char()
     stage = fields.Char(required=True)
     user_id = fields.Many2one("res.users")
+    status = fields.Selection([("compliant", "Compliant"), ("exception", "Authorized exception")], default="compliant", required=True)
+    exception_id = fields.Many2one("auditlog.attachment.exception", ondelete="restrict")
+    exception_reason = fields.Text()
+    exception_approver_id = fields.Many2one("res.users")
     required_count = fields.Integer()
     actual_count = fields.Integer()
     protect_evidence = fields.Boolean()
@@ -230,7 +252,7 @@ class IrAttachment(models.Model):
     @api.constrains("ff_audit_evidence", "type", "file_size", "res_model", "res_id")
     def _check_audit_evidence(self):
         for att in self.filtered("ff_audit_evidence"):
-            if att.type != "binary" or att.file_size <= 0 or not att.res_model or not att.res_id:
+            if att.type != "binary" or att.file_size <= 0 or not att.res_model or not att.res_id or att.res_field:
                 raise ValidationError(self.env._("Supporting evidence must be a non-empty file linked to a document."))
 
     ff_audit_protected = fields.Boolean(default=False, copy=False, readonly=True, index=True)
@@ -250,7 +272,10 @@ class IrAttachment(models.Model):
     def create(self, vals_list):
         if any("ff_audit_protected" in vals for vals in vals_list):
             raise UserError(self.env._("Audit protection is managed by the control engine."))
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        if any(records.sudo().mapped("ff_audit_protected")):
+            raise UserError(self.env._("Audit protection is managed by the control engine."))
+        return records
 
     def _ff_check_protected(self):
         self._ff_lock_evidence()
@@ -273,3 +298,79 @@ class IrAttachment(models.Model):
         self.check_access("unlink")
         self._ff_check_protected()
         return super().unlink()
+
+
+class AuditAttachmentException(models.Model):
+    _name = "auditlog.attachment.exception"
+    _description = "One-time Attachment Exception"
+    _order = "create_date desc"
+
+    rule_id = fields.Many2one("auditlog.attachment.rule", required=True, ondelete="restrict")
+    company_id = fields.Many2one("res.company", required=True, readonly=True)
+    resource_id = fields.Integer(required=True)
+    resource_name = fields.Char(readonly=True)
+    actor_id = fields.Many2one("res.users", required=True)
+    approver_id = fields.Many2one("res.users", readonly=True)
+    reason = fields.Text(required=True)
+    expires_at = fields.Datetime(required=True, default=lambda self: fields.Datetime.now() + timedelta(hours=24))
+    rule_revision = fields.Datetime(readonly=True)
+    consumed_at = fields.Datetime(readonly=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not self.env.user.has_group("flousflow_auditlog.group_attachment_exception"):
+            raise UserError(self.env._("Only an exception approver may grant an exception."))
+        for vals in vals_list:
+            rule = self.env["auditlog.attachment.rule"].browse(vals.get("rule_id")).exists()
+            rule.ensure_one()
+            rule.check_access("read")
+            if not rule.active or not rule.allow_exception:
+                raise UserError(self.env._("Exceptions are not enabled for this rule."))
+            if rule.company_id not in self.env.companies:
+                raise UserError(self.env._("Company is not accessible."))
+            record = self.env[rule.model_id.model].browse(vals.get("resource_id")).exists()
+            record.ensure_one()
+            record.check_access("read")
+            if record.company_id != rule.company_id:
+                raise UserError(self.env._("Document company must match the rule."))
+            actor = self.env["res.users"].browse(vals.get("actor_id")).exists()
+            actor.ensure_one()
+            if actor == self.env.user or rule.company_id not in actor.company_ids:
+                raise UserError(self.env._("Select another authorized company user."))
+            if not (vals.get("reason") or "").strip():
+                raise UserError(self.env._("A justification is required."))
+            expiry = fields.Datetime.to_datetime(vals.get("expires_at") or self.default_get(["expires_at"])["expires_at"])
+            if expiry <= fields.Datetime.now() or expiry > fields.Datetime.now() + timedelta(days=7):
+                raise UserError(self.env._("Expiry must be within the next seven days."))
+            vals.update(company_id=rule.company_id.id, resource_name=record.display_name,
+                        approver_id=self.env.uid, rule_revision=rule.write_date,
+                        consumed_at=False, expires_at=expiry)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        raise UserError(self.env._("Exception grants cannot be edited."))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_uninstall(self):
+        raise UserError(self.env._("Exception grants cannot be deleted."))
+
+    @api.model
+    def _consume(self, rule, record, actor):
+        if not rule.allow_exception:
+            return self.browse()
+        grants = self.sudo().search([
+            ("rule_id", "=", rule.id), ("company_id", "=", record.company_id.id),
+            ("resource_id", "=", record.id), ("actor_id", "=", actor.id),
+            ("rule_revision", "=", rule.write_date), ("consumed_at", "=", False),
+            ("expires_at", ">", fields.Datetime.now()),
+        ], order="id")
+        for grant in grants:
+            grant.flush_recordset()
+            self.env.cr.execute(SQL("SELECT id FROM %s WHERE id = %s FOR UPDATE",
+                                    SQL.identifier(grant._table), grant.id))
+            grant.invalidate_recordset(["consumed_at", "expires_at"])
+            if grant.consumed_at or grant.expires_at <= fields.Datetime.now():
+                continue
+            super(AuditAttachmentException, grant).write({"consumed_at": fields.Datetime.now()})
+            return grant
+        return self.browse()

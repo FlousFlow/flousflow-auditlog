@@ -27,3 +27,9 @@ Odoo upstream source inspected: d2a79d46ca412077759b0d4fb5caa0ffbfec3bd5.
 - Original release blockers above remain except where implemented here. Payment, scrap, adjustment, exception and secure upload provenance remain pending. No production readiness claim.
 
 Added regression tests for protected evidence, snapshot immutability, and duplicate hashes. Runtime tests remain unexecuted.
+
+## Fourth development increment
+- Payment posting, company-scoped quant adjustment, and scrap stock.move completion hooks; Odoo 20 upstream no longer contains stock.scrap model in stock. Quant evidence previously captured for the same quant is excluded. Shared-company quant locations do not match company-specific rules. Adjustment checks are pre-application and need rollback/zero-move tests. Scrap hook coverage of alternative creation and move splitting remains unverified.
+- One-use exception grant requires separate approver, target rule and document, another user, mandatory reason and expiry within seven days. Rule change invalidates grant. Consumption uses a row lock and is recorded in the compliance snapshot. Defaults off. Grant creation UI currently uses resource ID; no contextual request wizard or cancellation yet.
+- Prevent context defaults from setting protected attachment flag on create.
+- No runtime tests yet; all new integration points and access controls need installation, functional and security tests. Payment registration wizard and automatically generated moves require particular attention.
