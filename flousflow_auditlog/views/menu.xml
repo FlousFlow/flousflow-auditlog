@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record id="action_auditlog_home" model="ir.actions.act_window">
+        <field name="name">Activity Feed / نشاط العمليات</field>
+        <field name="res_model">auditlog.activity</field>
+        <field name="view_mode">list,form</field>
+    </record>
     <menuitem
         id="menu_audit"
-        name="Audit"
-        parent="base.menu_custom"
+        name="الرقابة الداخلية"
+        action="action_auditlog_home"
         sequence="50"
         groups="flousflow_auditlog.group_auditlog_user,flousflow_auditlog.group_document_control_reader"
     />
+    <menuitem id="menu_audit_monitoring" name="المتابعة"
+              parent="menu_audit" sequence="10"
+              groups="flousflow_auditlog.group_auditlog_user,flousflow_auditlog.group_document_control_reader"/>
+    <menuitem id="menu_audit_setup" name="الإعداد"
+              parent="menu_audit" sequence="20"
+              groups="flousflow_auditlog.group_auditlog_manager,flousflow_auditlog.group_document_control_manager"/>
+    <menuitem id="menu_audit_approvals" name="الاعتمادات"
+              parent="menu_audit" sequence="30"
+              groups="flousflow_auditlog.group_attachment_exception"/>
+    <record id="menu_audit" model="ir.ui.menu">
+        <field name="parent_id" eval="False"/>
+    </record>
 </odoo>

@@ -55,14 +55,15 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auditlog_http_session_tree">
-        <field name="name">User sessions</field>
+        <field name="name">User Sessions / جلسات المستخدمين</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">auditlog.http.session</field>
         <field name="view_id" ref="view_auditlog_http_session_tree" />
     </record>
     <menuitem
         id="menu_action_auditlog_http_session_tree"
-        parent="menu_audit"
+        name="جلسات المستخدمين"
+        parent="menu_audit_monitoring"
         action="action_auditlog_http_session_tree"
         sequence="40"
      groups="flousflow_auditlog.group_auditlog_user" />

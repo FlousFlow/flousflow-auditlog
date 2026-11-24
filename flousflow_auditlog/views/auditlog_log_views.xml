@@ -148,14 +148,14 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auditlog_log_tree">
-        <field name="name">Technical Logs</field>
+        <field name="name">Detailed Logs / السجلات التفصيلية</field>
         <field name="res_model">auditlog.log</field>
         <field name="search_view_id" ref="view_auditlog_log_search" />
     </record>
     <menuitem
         id="menu_audit_logs"
-        name="Technical Logs"
-        parent="menu_audit"
+        name="السجلات التفصيلية"
+        parent="menu_audit_monitoring"
         action="action_auditlog_log_tree"
         sequence="20"
      groups="flousflow_auditlog.group_auditlog_user" />
@@ -211,13 +211,13 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auditlog_activity">
-        <field name="name">Business Activity</field>
+        <field name="name">Activity Feed / نشاط العمليات</field>
         <field name="res_model">auditlog.activity</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_auditlog_activity_search"/>
         <field name="context">{}</field>
     </record>
-    <menuitem id="menu_audit_activity" name="Business Activity"
-              parent="menu_audit" action="action_auditlog_activity" sequence="10"
+    <menuitem id="menu_audit_activity" name="نشاط العمليات"
+              parent="menu_audit_monitoring" action="action_auditlog_activity" sequence="10"
               groups="flousflow_auditlog.group_auditlog_user"/>
 </odoo>
