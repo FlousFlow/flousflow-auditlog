@@ -164,14 +164,14 @@
         <field name="model">auditlog.activity</field>
         <field name="arch" type="xml">
             <list create="false" edit="false" delete="false">
-                <field name="started_at"/>
-                <field name="name"/>
-                <field name="kind"/>
-                <field name="user_id"/>
-                <field name="event_count"/>
-                <field name="record_count"/>
+                <field name="started_at" string="بداية العملية"/>
+                <field name="name" string="النشاط"/>
+                <field name="kind" string="نوع الحركة"/>
+                <field name="user_id" string="المستخدم"/>
+                <field name="event_count" string="عدد الأحداث"/>
+                <field name="record_count" string="عدد السجلات"/>
                 <field name="methods" optional="hide"/>
-                <button name="action_open_events" type="object" string="Details" icon="fa-list"/>
+                <button name="action_open_events" type="object" string="التفاصيل" icon="fa-list"/>
             </list>
         </field>
     </record>

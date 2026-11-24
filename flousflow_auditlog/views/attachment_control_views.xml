@@ -5,13 +5,13 @@
         <field name="model">auditlog.attachment.rule</field>
         <field name="arch" type="xml">
             <list>
-                <field name="name"/>
-                <field name="company_id"/>
-                <field name="model_id"/>
-                <field name="stage"/>
-                <field name="minimum_count"/>
-                <field name="protect_evidence"/>
-                <field name="active"/>
+                <field name="name" string="اسم القاعدة"/>
+                <field name="company_id" string="الشركة"/>
+                <field name="model_id" string="نوع المستند"/>
+                <field name="stage" string="المرحلة المطلوبة"/>
+                <field name="minimum_count" string="أقل عدد ملفات"/>
+                <field name="protect_evidence" string="حماية المستند"/>
+                <field name="active" string="مفعلة"/>
             </list>
         </field>
     </record>
@@ -73,11 +73,11 @@
         <field name="model">auditlog.attachment.compliance</field>
         <field name="arch" type="xml">
             <list create="false" edit="false" delete="false">
-                <field name="create_date"/><field name="resource_name"/>
-                <field name="model_name"/><field name="company_id"/>
-                <field name="status"/><field name="rule_name"/><field name="stage"/><field name="user_id"/>
-                <field name="required_count"/><field name="actual_count"/>
-                <field name="protect_evidence"/>
+                <field name="create_date" string="التاريخ"/><field name="resource_name" string="المستند"/>
+                <field name="model_name" string="نوع المستند"/><field name="company_id" string="الشركة"/>
+                <field name="status" string="الحالة"/><field name="rule_name" string="القاعدة"/><field name="stage" string="المرحلة"/><field name="user_id" string="المستخدم"/>
+                <field name="required_count" string="المطلوب"/><field name="actual_count" string="الموجود"/>
+                <field name="protect_evidence" string="محمي"/>
             </list>
         </field>
     </record>
