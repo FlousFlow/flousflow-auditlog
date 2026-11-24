@@ -32,7 +32,7 @@ class AttachmentControlSystray extends Component {
         try {
             const recordId = controller.currentState?.resId || controller.props?.resId || false;
             const moveType = current.context?.default_move_type || false;
-            const action = await this.orm.call("auditlog.attachment.rule", "open_contextual_rules",
+            const action = await this.orm.call("auditlog.control.context", "open_context",
                 [current.res_model, recordId, moveType, current.context?.default_picking_type_id || false, current.context?.default_payment_type || false]);
             await this.action.doAction(action);
         } finally {

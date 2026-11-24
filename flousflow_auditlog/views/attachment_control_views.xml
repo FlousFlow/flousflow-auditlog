@@ -31,7 +31,8 @@
                 <field name="protect_evidence"/>
                         <field name="allow_exception"/>
                         <field name="allowed_mimetypes"/>
-                        <field name="domain_text"/>
+                        <field name="model_name" invisible="1"/>
+                        <field name="domain_text" string="Apply on" widget="domain" options="{'model': 'model_name', 'in_dialog': True, 'allow_expressions': False}"/>
                         <field name="user_ids" widget="many2many_tags"/>
                         <field name="group_ids" widget="many2many_tags"/>
                     </group>
@@ -154,6 +155,28 @@
                     <button name="action_upload" type="object" string="Upload" class="btn-primary"/>
                     <button name="action_existing" type="object" string="Existing attachments" class="btn-secondary"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="view_control_context_form" model="ir.ui.view">
+        <field name="name">auditlog.control.context.form</field>
+        <field name="model">auditlog.control.context</field>
+        <field name="arch" type="xml">
+            <form string="Internal Control" create="false" edit="false">
+                <group>
+                    <field name="document_name"/>
+                    <field name="model_name" invisible="1"/>
+                    <field name="can_configure_audit" invisible="1"/>
+                    <field name="attachment_status"/>
+                    <field name="audit_status" invisible="not can_configure_audit"/>
+                </group>
+                <footer>
+                    <button name="action_attachment_rules" type="object" string="Attachment Control"
+                            invisible="attachment_status == 'unsupported'" class="btn-primary"/>
+                    <button name="action_audit_rules" type="object" string="Audit Tracking"
+                            invisible="not can_configure_audit" class="btn-secondary"/>
+                    <button string="Close" special="cancel"/>
                 </footer>
             </form>
         </field>

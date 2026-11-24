@@ -24,3 +24,5 @@ access_exception_approver,exception_approver,model_auditlog_attachment_exception
 access_evidence_upload,evidence_upload,model_auditlog_evidence_upload,base.group_user,1,1,1,1
 
 access_audit_activity_user,audit_activity_user,model_auditlog_activity,flousflow_auditlog.group_auditlog_user,1,0,0,0
+
+access_control_context,control_context,model_auditlog_control_context,flousflow_auditlog.group_document_control_manager,1,1,1,1

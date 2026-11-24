@@ -22,6 +22,7 @@ class AuditAttachmentRule(models.Model):
         index=True
     )
     model_id = fields.Many2one("ir.model", required=True, ondelete="restrict")
+    model_name = fields.Char(related="model_id.model", readonly=True)
     stage = fields.Selection(
         [("confirm", "Confirmation"), ("post", "Posting"),
          ("complete", "Completion")], required=True, default="confirm"
@@ -54,11 +55,13 @@ class AuditAttachmentRule(models.Model):
         for rule in self:
             if rule.minimum_count < 1:
                 raise ValidationError(self.env._("At least one attachment is required."))
+            if not any(point[0] == rule.model_id.model for point in self._supported_points()):
+                raise ValidationError(self.env._("No installed enforcement adapter for this model."))
             try:
                 domain = literal_eval(rule.domain_text)
                 if not isinstance(domain, list):
                     raise ValueError()
-                self.env[rule.model_id.model].sudo().search(domain, limit=1)
+                self.env[rule.model_id.model].search(domain, limit=1)
             except (ValueError, TypeError, SyntaxError, KeyError, AssertionError) as exc:
                 raise ValidationError(self.env._("Invalid rule domain.")) from exc
             if rule.active and (rule.model_id.model, rule.stage) not in self._supported_points():
@@ -76,6 +79,7 @@ class AuditAttachmentRule(models.Model):
         defaults = {"default_model_id": model.id, "default_company_id": self.env.company.id,
                     "default_stage": points[0], "active_test": False}
         domain = [("model_id", "=", model.id), ("company_id", "=", self.env.company.id)]
+        record = False
         if record_id:
             record = self.env[model_name].browse(int(record_id)).exists()
             if record:
@@ -451,3 +455,80 @@ class AuditEvidenceUpload(models.TransientModel):
             ],
             "target": "current",
         }
+
+
+class AuditControlContext(models.TransientModel):
+    _name = "auditlog.control.context"
+    _description = "Contextual internal controls"
+
+    model_name = fields.Char(required=True, readonly=True)
+    resource_id = fields.Integer(readonly=True)
+    move_type = fields.Char(readonly=True)
+    picking_type_id = fields.Integer(readonly=True)
+    payment_type = fields.Char(readonly=True)
+    document_name = fields.Char(readonly=True)
+    attachment_status = fields.Selection([
+        ("unsupported", "Unsupported operation"),
+        ("active", "Active rules"),
+        ("inactive", "Inactive rules"),
+        ("none", "No rules"),
+    ], readonly=True)
+    audit_status = fields.Selection([
+        ("active", "Active rules"), ("inactive", "Inactive rules"), ("none", "No rules"),
+    ], readonly=True)
+    can_configure_audit = fields.Boolean(readonly=True)
+
+    @api.model
+    def open_context(self, model_name, record_id=False, move_type=False, picking_type_id=False, payment_type=False):
+        if not self.env.user.has_group("flousflow_auditlog.group_document_control_manager"):
+            raise UserError(self.env._("Only attachment control managers can configure rules."))
+        model = self.env["ir.model"].sudo().search([("model", "=", model_name)], limit=1)
+        if not model or model_name not in self.env or self.env[model_name]._transient:
+            raise UserError(self.env._("Open a supported business document first."))
+        self.env[model_name].check_access("read")
+        record = self.env[model_name].browse(int(record_id)).exists() if record_id else self.env[model_name].browse()
+        record.check_access("read")
+        engine = self.env["auditlog.attachment.rule"]
+        supported = any(point[0] == model_name for point in engine._supported_points())
+        if model_name == "stock.move" and record and not record.is_scrap:
+            supported = False
+        rules = engine.with_context(active_test=False).search([
+            ("model_id", "=", model.id), ("company_id", "=", self.env.company.id),
+        ]) if supported else engine.browse()
+        if record:
+            rules = rules.filtered(lambda rule: bool(record.filtered_domain(literal_eval(rule.domain_text))))
+        can_audit = self.env.user.has_group("flousflow_auditlog.group_auditlog_manager")
+        audit = self.env["auditlog.rule"].search([("model_id", "=", model.id)], limit=1) if can_audit else False
+        wizard = self.create({
+            "model_name": model_name, "resource_id": record.id or 0,
+            "move_type": move_type or False, "picking_type_id": picking_type_id or 0,
+            "payment_type": payment_type or False,
+            "document_name": record.display_name if record else model.name,
+            "attachment_status": "unsupported" if not supported else (
+                "active" if any(rules.mapped("active")) else "inactive" if rules else "none"
+            ),
+            "audit_status": "active" if audit and audit.state == "confirmed" else "inactive" if audit else "none",
+            "can_configure_audit": can_audit,
+        })
+        return {
+            "type": "ir.actions.act_window", "name": self.env._("Internal Control"),
+            "res_model": self._name, "res_id": wizard.id, "view_mode": "form", "target": "new",
+        }
+
+    def action_attachment_rules(self):
+        self.ensure_one()
+        return self.env["auditlog.attachment.rule"].open_contextual_rules(
+            self.model_name, self.resource_id, self.move_type, self.picking_type_id, self.payment_type
+        )
+
+    def action_audit_rules(self):
+        self.ensure_one()
+        if not self.env.user.has_group("flousflow_auditlog.group_auditlog_manager"):
+            raise UserError(self.env._("Only global audit managers may configure tracking."))
+        model = self.env["ir.model"].sudo().search([("model", "=", self.model_name)], limit=1)
+        model.ensure_one()
+        self.env[self.model_name].check_access("read")
+        action = self.env["ir.actions.actions"]._for_xml_id("flousflow_auditlog.action_auditlog_rule_tree")
+        action.update({"domain": [("model_id", "=", model.id)],
+                       "context": {"default_model_id": model.id, "default_name": model.name}})
+        return action

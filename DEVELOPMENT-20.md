@@ -55,3 +55,9 @@ Added regression tests for protected evidence, snapshot immutability, and duplic
 - Technical log ACLs are read-only for managers; retention is still a separately authorized purge method. Global audit administrators/server operators are not a tamper-proof adversary boundary.
 - Company consistency and MIME filters for supporting evidence; rule revision UUID invalidates previously issued exception grants after a rule edit (including same-second edits).
 - No claim of record-level partitioning of raw technical logs: arbitrary model fields may contain another company's data, so use scoped roles for branch users. Runtime verification pending.
+
+## Contextual control UI
+- Standard modal opens from shield, showing attachment rule status and (only for global audit managers) audit tracking status; opens relevant rule list with model/company defaults. On saved records, rule status matches actual business domain. On list views, status is model-level rather than a guarantee of each document's coverage.
+- Standard Odoo 20 domain widget replaces the raw technical text field, with expressions disabled. Actual domain validation remains server-side.
+- Correct exception approver implied group to company document reader (not global audit reader).
+- UI and backend security tests still required.
