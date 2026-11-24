@@ -1,7 +1,6 @@
 # Copyright 2026 Flous Flow
 # License AGPL-3.0 or later.
-from base64 import b64encode
-
+from odoo.tools import BinaryBytes
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
@@ -20,7 +19,7 @@ class TestSaleAttachmentControl(TransactionCase):
             rule._check_attachments(order, "confirm")
         attachment = self.env["ir.attachment"].create({
             "name": "support.txt", "res_model": order._name, "res_id": order.id,
-            "datas": b64encode(b"evidence"),
+            "raw": BinaryBytes(b"evidence"),
         })
         with self.assertRaises(UserError):
             rule._check_attachments(order, "confirm")
@@ -38,7 +37,7 @@ class TestSaleAttachmentControl(TransactionCase):
         })
         attachment = self.env["ir.attachment"].create({
             "name": "support.txt", "res_model": order._name, "res_id": order.id,
-            "datas": b64encode(b"evidence"), "ff_audit_evidence": True,
+            "raw": BinaryBytes(b"evidence"), "ff_audit_evidence": True,
         })
         rule._check_attachments(order, "confirm", capture=True)
         self.assertTrue(attachment.ff_audit_protected)
@@ -54,7 +53,7 @@ class TestSaleAttachmentControl(TransactionCase):
         with self.assertRaises(UserError), self.env.cr.savepoint():
             attachment.write({"ff_audit_evidence": False})
         with self.assertRaises(UserError), self.env.cr.savepoint():
-            attachment.write({"datas": b64encode(b"changed")})
+            attachment.write({"raw": BinaryBytes(b"changed")})
         with self.assertRaises(UserError), self.env.cr.savepoint():
             attachment.write({"ff_audit_protected": False})
         with self.assertRaises(UserError), self.env.cr.savepoint():
@@ -75,7 +74,7 @@ class TestSaleAttachmentControl(TransactionCase):
         for name in ("a.txt", "b.txt"):
             self.env["ir.attachment"].create({
                 "name": name, "res_model": order._name, "res_id": order.id,
-                "datas": b64encode(b"same evidence"), "ff_audit_evidence": True,
+                "raw": BinaryBytes(b"same evidence"), "ff_audit_evidence": True,
             })
         with self.assertRaises(UserError), self.env.cr.savepoint():
             rule._check_attachments(order, "confirm", capture=True)
@@ -85,7 +84,7 @@ class TestSaleAttachmentControl(TransactionCase):
         order = self.env["sale.order"].create({"partner_id": partner.id})
         wizard = self.env["auditlog.evidence.upload"].create({
             "model_name": order._name, "resource_id": order.id,
-            "filename": "support.txt", "data": b64encode(b"supporting document"),
+            "filename": "support.txt", "data": "c3VwcG9ydGluZyBkb2N1bWVudA==",
         })
         wizard.action_upload()
         att = self.env["ir.attachment"].search([
