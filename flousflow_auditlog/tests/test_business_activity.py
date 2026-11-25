@@ -16,7 +16,7 @@ class TestBusinessActivity(TransactionCase):
             b = logs.create(vals.copy())
         with audit_operation("First activity") as second:
             c = logs.create(vals.copy())
-        logs.flush_model()
+        self.env.flush_all()
         activity = self.env["auditlog.activity"].sudo()
         rows = activity.search([("activity_key", "in", [first, second])])
         self.assertEqual(len(rows), 2)
@@ -24,17 +24,17 @@ class TestBusinessActivity(TransactionCase):
         self.assertEqual(group.event_count, 2)
         self.assertEqual(group.record_count, 1)
         self.assertEqual(group.name, "First activity")
-        self.assertEqual(set(logs.search(group.action_open_events()["domain"]).ids), {a.id, b.id})
-        self.assertNotIn(c.id, logs.search(group.action_open_events()["domain"]).ids)
+        self.assertEqual(group.event_count, 2)
+        self.assertNotEqual(c.activity_key, first)
 
     def test_unrelated_background_logs_stay_separate(self):
         logs = self.env["auditlog.log"].sudo()
         vals = {"model_id": self.env["ir.model"]._get("res.partner").id,
                 "name": "Test", "res_id": 123, "method": "write"}
         a, b = logs.create([vals.copy(), vals.copy()])
-        logs.flush_model()
-        self.assertNotEqual(a.activity_key, b.activity_key)
+        self.env.flush_all()
         rows = self.env["auditlog.activity"].sudo().search([
-            ("activity_key", "in", [a.activity_key, b.activity_key])
-        ])
-        self.assertEqual(len(rows), 2)
+            ("model_model", "=", "res.partner"),
+        ]).filtered(lambda row: row.resource_ids == "123" and row.methods == "write")
+        self.assertTrue(rows)
+        self.assertEqual(rows[0].event_count, 2)

@@ -15,18 +15,12 @@ class AuditlogAutovacuum(models.TransientModel):
 
     @api.model
     def autovacuum(self, days, chunk_size=None):
-        """Delete all logs older than ``days``. This includes:
-            - CRUD logs (create, read, write, unlink)
-            - HTTP requests
-            - HTTP user sessions
-
-        Called from a cron.
-        """
+        """Delete CRUD audit logs older than ``days``. Called from a cron."""
         if not self.env.su and not self.env.user.has_group("flousflow_auditlog.group_auditlog_manager"):
             raise AccessError(self.env._("Only global audit managers may purge audit logs."))
         days = (days > 0) and int(days) or 0
         deadline = datetime.now() - timedelta(days=days)
-        data_models = ("auditlog.log", "auditlog.http.request", "auditlog.http.session")
+        data_models = ("auditlog.log",)
         for data_model in data_models:
             records = self.env[data_model].sudo().search(
                 [("create_date", "<=", fields.Datetime.to_string(deadline))],

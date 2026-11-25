@@ -2,36 +2,22 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 import time
 
+from odoo.tests import tagged
+
 from .common import AuditLogRuleCommon
 
 
+@tagged("post_install", "-at_install")
 class TestAuditlogAutovacuum(AuditLogRuleCommon):
     def setUp(self):
         super().setUp()
-        self.groups_model_id = self.env.ref("base.model_res_groups").id
-        self.groups_rule = self.create_rule(
-            {
-                "name": "testrule for groups",
-                "model_id": self.groups_model_id,
-                "log_read": True,
-                "log_create": True,
-                "log_write": True,
-                "log_unlink": True,
-                "state": "confirmed",
-                "log_type": "full",
-            }
-        )
-
-    def tearDown(self):
-        self.groups_rule.unlink()
-        super().tearDown()
 
     def test_autovacuum(self):
         log_model = self.env["auditlog.log"]
         autovacuum_model = self.env["auditlog.autovacuum"]
-        group = self.env["res.groups"].create({"name": "testgroup1"})
+        partner = self.env["res.partner"].create({"name": "autovacuum test"})
         nb_logs = log_model.search_count(
-            [("model_id", "=", self.groups_model_id), ("res_id", "=", group.id)]
+            [("model_model", "=", "res.partner"), ("res_id", "=", partner.id)]
         )
         self.assertGreater(nb_logs, 0)
         # Milliseconds are ignored by autovacuum, waiting 1s ensure that
@@ -39,6 +25,6 @@ class TestAuditlogAutovacuum(AuditLogRuleCommon):
         time.sleep(1)
         autovacuum_model.autovacuum(days=0)
         nb_logs = log_model.search_count(
-            [("model_id", "=", self.groups_model_id), ("res_id", "=", group.id)]
+            [("model_model", "=", "res.partner"), ("res_id", "=", partner.id)]
         )
         self.assertEqual(nb_logs, 0)

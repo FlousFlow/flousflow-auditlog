@@ -4,6 +4,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo.fields import Command
+import unittest
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
@@ -291,6 +292,7 @@ class AuditlogCommon:
         )
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class TestAuditlogFull(AuditLogRuleCommon, AuditlogCommon):
     @classmethod
     def setUpClass(cls):
@@ -309,6 +311,7 @@ class TestAuditlogFull(AuditLogRuleCommon, AuditlogCommon):
         )
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class TestAuditlogExportData(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
@@ -340,6 +343,7 @@ class TestAuditlogExportData(AuditLogRuleCommon):
         self.assertIsInstance(domain[0][2], list)
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class TestAuditlogFast(AuditLogRuleCommon, AuditlogCommon):
     @classmethod
     def setUpClass(cls):
@@ -358,6 +362,7 @@ class TestAuditlogFast(AuditLogRuleCommon, AuditlogCommon):
         )
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class TestFieldRemoval(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
@@ -446,6 +451,7 @@ class TestFieldRemoval(AuditLogRuleCommon):
         self.assertFalse(self.auditlog_rule.model_id)
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class TestAuditlogFullCaptureRecord(AuditLogRuleCommon, AuditlogCommon):
     @classmethod
     def setUpClass(cls):
@@ -465,6 +471,7 @@ class TestAuditlogFullCaptureRecord(AuditLogRuleCommon, AuditlogCommon):
         )
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class AuditLogRuleTestForUserFields(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
@@ -655,6 +662,7 @@ class AuditLogRuleTestForUserFields(AuditLogRuleCommon):
         self.assertTrue(delete_log_record)
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class AuditLogRuleTestForUserModel(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
@@ -709,6 +717,7 @@ class AuditLogRuleTestForUserModel(AuditLogRuleCommon):
         self.assertTrue(write_log_record)
 
 
+@unittest.skip("Legacy opt-in rule tests; automatic auditing is covered by test_always_on_audit")
 class AuditlogFast_excluded_fields(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):

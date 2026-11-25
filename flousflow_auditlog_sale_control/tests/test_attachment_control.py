@@ -6,6 +6,14 @@ from odoo.tests.common import TransactionCase
 
 
 class TestSaleAttachmentControl(TransactionCase):
+    def test_context_action_opens_model_scoped_rule_form(self):
+        action = self.env["auditlog.control.context"].open_context(
+            "sale.order", move_type=False
+        )
+        self.assertEqual(action["target"], "new")
+        self.assertEqual(action["view_mode"], "form")
+        self.assertEqual(action["views"][0][1], "form")
+
     def test_rule_rejects_missing_and_accepts_distinct_evidence(self):
         partner = self.env["res.partner"].create({"name": "Audit test customer"})
         order = self.env["sale.order"].create({"partner_id": partner.id})

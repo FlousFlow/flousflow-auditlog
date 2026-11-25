@@ -4,7 +4,7 @@
 
 {
     "name": "Flous Flow Audit Log",
-    "version": "20.0.1.2.0",
+    "version": "20.0.1.19.0",
     "author": "Flous Flow (integration), ABF OSIELL, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "website": "https://flousflow.com",
@@ -18,9 +18,6 @@
         "security/ir.access.csv",
         "data/ir_cron.xml",
         "views/menu.xml",
-        "views/auditlog_http_request_views.xml",
-        "views/auditlog_http_session_views.xml",
-        "views/auditlog_log_line_views.xml",
         "views/auditlog_log_views.xml",
         "views/auditlog_rule_views.xml",
         "views/attachment_control_views.xml",

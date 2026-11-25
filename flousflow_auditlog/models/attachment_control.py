@@ -16,7 +16,9 @@ class AuditAttachmentRule(models.Model):
     _order = "name, id"
 
     name = fields.Char(required=True)
-    active = fields.Boolean(default=False)
+    # A rule created from a document's contextual control is meant to enforce
+    # immediately. Users can still deactivate it explicitly from the form.
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         "res.company", required=True, default=lambda self: self.env.company,
         index=True
@@ -70,7 +72,7 @@ class AuditAttachmentRule(models.Model):
                 raise ValidationError(self.env._("No installed enforcement adapter for this operation."))
 
     @api.model
-    def open_contextual_rules(self, model_name, record_id=False, default_move_type=False, picking_type_id=False, payment_type=False):
+    def open_contextual_rules(self, model_name, record_id=False, default_move_type=False, picking_type_id=False, payment_type=False, form_only=False):
         if not (
             self.env.user.has_group("flousflow_auditlog.group_document_control_manager")
             or self.env.user.has_group("base.group_system")
@@ -82,7 +84,8 @@ class AuditAttachmentRule(models.Model):
             raise UserError(self.env._("This screen has no installed attachment enforcement adapter."))
         model = self.env["ir.model"].sudo().search([("model", "=", model_name)], limit=1)
         defaults = {"default_model_id": model.id, "default_company_id": self.env.company.id,
-                    "default_stage": points[0], "active_test": False}
+                    "default_stage": points[0], "default_active": True,
+                    "active_test": False}
         domain = [("model_id", "=", model.id), ("company_id", "=", self.env.company.id)]
         record = False
         if record_id:
@@ -118,6 +121,9 @@ class AuditAttachmentRule(models.Model):
             "flousflow_auditlog.action_attachment_control"
         )
         action.update({"domain": domain, "context": defaults, "target": "current"})
+        if form_only:
+            form_view = self.env.ref("flousflow_auditlog.view_attachment_control_form")
+            action.update({"view_mode": "form", "views": [(form_view.id, "form")]})
         return action
 
     @api.model

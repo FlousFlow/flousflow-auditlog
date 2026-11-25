@@ -23,12 +23,6 @@ class AuditlogLog(models.Model):
     user_id = fields.Many2one("res.users", string="User")
     method = fields.Char(size=64)
     line_ids = fields.One2many("auditlog.log.line", "log_id", string="Fields updated")
-    http_session_id = fields.Many2one(
-        "auditlog.http.session", string="Session", index=True
-    )
-    http_request_id = fields.Many2one(
-        "auditlog.http.request", string="HTTP Request", index=True
-    )
     log_type = fields.Selection(
         [("full", "Full log"), ("fast", "Fast log")], string="Type"
     )
@@ -38,15 +32,11 @@ class AuditlogLog(models.Model):
         string="Activity", compute="_compute_activity_key", store=True, index=True
     )
 
-    @api.depends("operation_key", "http_request_id", "user_id")
+    @api.depends("operation_key", "user_id")
     def _compute_activity_key(self):
         for log in self:
             if log.operation_key:
                 log.activity_key = log.operation_key
-            elif log.http_request_id:
-                log.activity_key = "HTTP #%s / User #%s" % (
-                    log.http_request_id.id, log.user_id.id or 0
-                )
             else:
                 log.activity_key = "Log #%s" % log.id
 

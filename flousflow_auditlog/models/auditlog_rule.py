@@ -7,6 +7,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.orm.identifiers import NewId
+from .operation_scope import audit_document_operation
 
 FIELDS_BLACKLIST = [
     "id",
@@ -20,6 +21,10 @@ FIELDS_BLACKLIST = [
 # Used for performance, to avoid a dictionary instanciation when we need an
 # empty dict to simplify algorithms
 EMPTY_DICT = {}
+AUTO_AUDIT_EXCLUDED_PREFIXES = (
+    "auditlog.", "ir.", "bus.", "mail.", "web.", "base.",
+)
+AUTO_AUDIT_EXCLUDED_MODELS = {"res.users", "res.groups", "res.groups.privilege"}
 
 
 class DictDiffer:
@@ -241,19 +246,19 @@ class AuditlogRule(models.Model):
             self = self.search([("state", "=", "confirmed")])
         return self._patch_methods()
 
-    def _patch_method(self, model, method_name, check_attr):
+    def _patch_method(self, model, method_name, check_attr, rule=None):
         result = new_method = False
         model_class = type(model)
         if method_name == "create":
-            new_method = self._make_create()
+            new_method = self._make_create(rule)
         elif method_name == "read":
-            new_method = self._make_read()
+            new_method = self._make_read(rule)
         elif method_name == "write":
-            new_method = self._make_write()
+            new_method = self._make_write(rule)
         elif method_name == "unlink":
-            new_method = self._make_unlink()
+            new_method = self._make_unlink(rule)
         elif method_name == "export_data":
-            new_method = self._make_export_data()
+            new_method = self._make_export_data(rule)
         if new_method:
             new_method.origin = getattr(model_class, method_name)
             setattr(model_class, method_name, new_method)
@@ -262,9 +267,21 @@ class AuditlogRule(models.Model):
         return result
 
     def _patch_methods(self):
-        """Patch ORM methods of models defined in rules to log their calls."""
+        """Patch business models automatically, with optional legacy overrides."""
         updated = False
         model_cache = self.pool._auditlog_model_cache
+        if self.env.context.get("auditlog_auto_enabled", True):
+            for model_name in self.pool.models:
+                if model_name.startswith(AUTO_AUDIT_EXCLUDED_PREFIXES) or model_name in AUTO_AUDIT_EXCLUDED_MODELS:
+                    continue
+                model_model = self.env[model_name]
+                if not getattr(model_model, "_auto", False) or getattr(model_model, "_transient", False):
+                    continue
+                model_cache[model_name] = self.env["ir.model"].sudo()._get(model_name).id
+                for method, check_attr in (("create", "auditlog_ruled_create"), ("write", "auditlog_ruled_write"), ("unlink", "auditlog_ruled_unlink"), ("export_data", "auditlog_ruled_export_data")):
+                    if not hasattr(model_model, check_attr):
+                        updated = self._patch_method(model_model, method, check_attr) or updated
+            return updated
         for rule in self:
             if rule.state != "confirmed" or not self.pool.get(
                 rule.model_id.model or rule.model_model
@@ -357,11 +374,15 @@ class AuditlogRule(models.Model):
             if (not f.compute and not f.related) or f.store
         )
 
-    def _make_create(self):
+    def _make_create(self, rule=None):
         """Instanciate a create method that log its calls."""
-        self.ensure_one()
-        log_type = self.log_type
-        users_to_exclude = self.mapped("users_to_exclude_ids")
+        if rule is None:
+            log_type = "fast"
+            users_to_exclude = self.env["res.users"].browse()
+        else:
+            rule.ensure_one()
+            log_type = rule.log_type
+            users_to_exclude = rule.mapped("users_to_exclude_ids")
 
         @api.model_create_multi
         def create_full(self, vals_list, **kwargs):
@@ -421,13 +442,25 @@ class AuditlogRule(models.Model):
             )
             return new_records
 
-        return create_full if self.log_type == "full" else create_fast
+        method = create_full if self.log_type == "full" else create_fast
 
-    def _make_read(self):
+        @api.model_create_multi
+        def create_audited(self, vals_list, **kwargs):
+            method.origin = create_audited.origin
+            with audit_document_operation(self, f"{self._description}: إنشاء"):
+                return method(self, vals_list, **kwargs)
+
+        return create_audited
+
+    def _make_read(self, rule=None):
         """Instanciate a read method that log its calls."""
-        self.ensure_one()
-        log_type = self.log_type
-        users_to_exclude = self.mapped("users_to_exclude_ids")
+        if rule is None:
+            log_type = "fast"
+            users_to_exclude = self.env["res.users"].browse()
+        else:
+            rule.ensure_one()
+            log_type = rule.log_type
+            users_to_exclude = rule.mapped("users_to_exclude_ids")
 
         def read(self, fields=None, load="_classic_read", **kwargs):
             result = read.origin(self, fields, load, **kwargs)
@@ -462,11 +495,15 @@ class AuditlogRule(models.Model):
 
         return read
 
-    def _make_write(self):
+    def _make_write(self, rule=None):
         """Instanciate a write method that log its calls."""
-        self.ensure_one()
-        log_type = self.log_type
-        users_to_exclude = self.mapped("users_to_exclude_ids")
+        if rule is None:
+            log_type = "fast"
+            users_to_exclude = self.env["res.users"].browse()
+        else:
+            rule.ensure_one()
+            log_type = rule.log_type
+            users_to_exclude = rule.mapped("users_to_exclude_ids")
 
         def write_full(self, vals, **kwargs):
             guard = self.env.context.get("auditlog_guard", set())
@@ -531,13 +568,24 @@ class AuditlogRule(models.Model):
             )
             return result
 
-        return write_full if self.log_type == "full" else write_fast
+        method = write_full if self.log_type == "full" else write_fast
 
-    def _make_unlink(self):
+        def write_audited(self, vals, **kwargs):
+            method.origin = write_audited.origin
+            with audit_document_operation(self, f"{self._description}: تعديل"):
+                return method(self, vals, **kwargs)
+
+        return write_audited
+
+    def _make_unlink(self, rule=None):
         """Instanciate an unlink method that log its calls."""
-        self.ensure_one()
-        log_type = self.log_type
-        users_to_exclude = self.mapped("users_to_exclude_ids")
+        if rule is None:
+            log_type = "fast"
+            users_to_exclude = self.env["res.users"].browse()
+        else:
+            rule.ensure_one()
+            log_type = rule.log_type
+            users_to_exclude = rule.mapped("users_to_exclude_ids")
 
         def unlink_full(self, **kwargs):
             self = self.with_context(auditlog_disabled_read=True)
@@ -578,13 +626,24 @@ class AuditlogRule(models.Model):
             )
             return unlink_fast.origin(self, **kwargs)
 
-        return unlink_full if self.log_type == "full" else unlink_fast
+        method = unlink_full if self.log_type == "full" else unlink_fast
 
-    def _make_export_data(self):
+        def unlink_audited(self, **kwargs):
+            method.origin = unlink_audited.origin
+            with audit_document_operation(self, f"{self._description}: حذف"):
+                return method(self, **kwargs)
+
+        return unlink_audited
+
+    def _make_export_data(self, rule=None):
         """Instanciate a export method that log its calls."""
-        self.ensure_one()
-        log_type = self.log_type
-        users_to_exclude = self.mapped("users_to_exclude_ids")
+        if rule is None:
+            log_type = "fast"
+            users_to_exclude = self.env["res.users"].browse()
+        else:
+            rule.ensure_one()
+            log_type = rule.log_type
+            users_to_exclude = rule.mapped("users_to_exclude_ids")
 
         def export_data(self, fields_to_export):
             res = export_data.origin(self, fields_to_export)
@@ -603,7 +662,14 @@ class AuditlogRule(models.Model):
             )
             return res
 
-        return export_data
+        method = export_data
+
+        def export_data_audited(self, fields_to_export):
+            method.origin = export_data_audited.origin
+            with audit_document_operation(self, f"{self._description}: تصدير"):
+                return method(self, fields_to_export)
+
+        return export_data_audited
 
     def create_logs(
         self,
@@ -623,58 +689,56 @@ class AuditlogRule(models.Model):
         if new_values is None:
             new_values = EMPTY_DICT
         log_model = self.env["auditlog.log"]
-        http_request_model = self.env["auditlog.http.request"]
-        http_session_model = self.env["auditlog.http.session"]
         model_model = self.env[res_model]
         model_id = self.pool._auditlog_model_cache[res_model]
-        auditlog_rule = self.env["auditlog.rule"].search([("model_id", "=", model_id)])
-        fields_to_exclude = auditlog_rule.fields_to_exclude_ids.mapped("name")
+        auditlog_rule = self.env["auditlog.rule"].search([("model_id", "=", model_id)], limit=1)
+        fields_to_exclude = auditlog_rule.fields_to_exclude_ids.mapped("name") if auditlog_rule else []
 
         vals = {
             "model_id": model_id,
             "method": method,
             "user_id": uid,
-            "http_request_id": http_request_model.current_http_request(),
-            "http_session_id": http_session_model.current_http_session(),
         }
         vals.update(additional_log_values or {})
-        if method == "export_data":
-            vals.update({"name": res_model, "res_ids": str(res_ids)})
-            return log_model.create(vals)
+        records = model_model.browse(res_ids)
+        with audit_document_operation(records, f"{model_model._description}: {method}"):
+            if method == "export_data":
+                vals.update({"name": res_model, "res_ids": str(res_ids)})
+                return log_model.create(vals)
 
-        for res_id in res_ids:
-            log_vals = {**vals, "res_id": res_id}
+            for res_id in res_ids:
+                log_vals = {**vals, "res_id": res_id}
 
-            diff = DictDiffer(
-                new_values.get(res_id, EMPTY_DICT), old_values.get(res_id, EMPTY_DICT)
-            )
-            if method == "create":
-                log_vals["line_ids"] = self._create_log_line_on_create(
-                    log_vals, diff.added(), new_values, fields_to_exclude
+                diff = DictDiffer(
+                    new_values.get(res_id, EMPTY_DICT), old_values.get(res_id, EMPTY_DICT)
                 )
-            elif method == "read":
-                log_vals["line_ids"] = self._create_log_line_on_read(
-                    log_vals,
-                    list(old_values.get(res_id, EMPTY_DICT).keys()),
-                    old_values,
-                    fields_to_exclude,
-                )
-            elif method == "write":
-                log_vals["line_ids"] = self._create_log_line_on_write(
-                    log_vals, diff.changed(), old_values, new_values, fields_to_exclude
-                )
-            elif method == "unlink" and auditlog_rule.capture_record:
-                log_vals["line_ids"] = self._create_log_line_on_read(
-                    log_vals,
-                    list(old_values.get(res_id, EMPTY_DICT).keys()),
-                    old_values,
-                    fields_to_exclude,
-                )
-            if method == "unlink" or log_vals.get("line_ids", {}):
-                res = model_model.browse(res_id)
-                res.fetch(["display_name"])
-                log_vals.update({"name": res.display_name})
-                log_model.create(log_vals)
+                if method == "create":
+                    log_vals["line_ids"] = self._create_log_line_on_create(
+                        log_vals, diff.added(), new_values, fields_to_exclude
+                    )
+                elif method == "read":
+                    log_vals["line_ids"] = self._create_log_line_on_read(
+                        log_vals,
+                        list(old_values.get(res_id, EMPTY_DICT).keys()),
+                        old_values,
+                        fields_to_exclude,
+                    )
+                elif method == "write":
+                    log_vals["line_ids"] = self._create_log_line_on_write(
+                        log_vals, diff.changed(), old_values, new_values, fields_to_exclude
+                    )
+                elif method == "unlink" and (not auditlog_rule or auditlog_rule.capture_record):
+                    log_vals["line_ids"] = self._create_log_line_on_read(
+                        log_vals,
+                        list(old_values.get(res_id, EMPTY_DICT).keys()),
+                        old_values,
+                        fields_to_exclude,
+                    )
+                if method == "unlink" or log_vals.get("line_ids", {}):
+                    res = model_model.browse(res_id)
+                    res.fetch(["display_name"])
+                    log_vals.update({"name": res.display_name})
+                    log_model.create(log_vals)
 
     def _get_field(self, model_id, field_name):
         model = self.env["ir.model"].sudo().browse(model_id)
@@ -770,6 +834,20 @@ class AuditlogRule(models.Model):
             "new_value": new_values[log_vals["res_id"]][field["name"]],
             "new_value_text": new_values[log_vals["res_id"]][field["name"]],
         }
+        # Store readable names for relational values while keeping the raw IDs
+        # in old_value/new_value for audit integrity.
+        if field.get("ttype") == "many2one" and field.get("relation"):
+            relation = self.env[field["relation"]].sudo()
+            vals["old_value_text"] = (
+                relation.browse(vals["old_value"]).display_name
+                if vals["old_value"]
+                else ""
+            )
+            vals["new_value_text"] = (
+                relation.browse(vals["new_value"]).display_name
+                if vals["new_value"]
+                else ""
+            )
         # for *2many fields, log the display_name
         if (
             log_vals["log_type"] == "full"

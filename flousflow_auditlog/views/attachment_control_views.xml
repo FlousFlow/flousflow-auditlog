@@ -68,45 +68,6 @@
             </list>
         </field>
     </record>
-    <record id="view_compliance_list" model="ir.ui.view">
-        <field name="name">auditlog.attachment.compliance.list</field>
-        <field name="model">auditlog.attachment.compliance</field>
-        <field name="arch" type="xml">
-            <list create="false" edit="false" delete="false">
-                <field name="create_date" string="Date"/><field name="resource_name" string="Document"/>
-                <field name="model_name" string="Document Type"/><field name="company_id" string="Company"/>
-                <field name="status" string="Status"/><field name="rule_name" string="Rule"/><field name="stage" string="Stage"/><field name="user_id" string="User"/>
-                <field name="required_count" string="Required"/><field name="actual_count" string="Actual"/>
-                <field name="protect_evidence" string="Protected"/>
-            </list>
-        </field>
-    </record>
-    <record id="view_compliance_form" model="ir.ui.view">
-        <field name="name">auditlog.attachment.compliance.form</field>
-        <field name="model">auditlog.attachment.compliance</field>
-        <field name="arch" type="xml">
-            <form create="false" edit="false" delete="false"><sheet><group>
-                <field name="create_date"/><field name="resource_name"/>
-                <field name="resource_id"/><field name="model_name"/>
-                <field name="company_id"/><field name="rule_name"/><field name="rule_domain"/><field name="rule_version"/><field name="allowed_mimetypes"/>
-                <field name="stage"/><field name="user_id"/><field name="required_count"/>
-                <field name="actual_count"/><field name="protect_evidence"/>
-                <field name="status"/><field name="exception_reason"/><field name="exception_approver_id"/><field name="evidence_digest"/>
-            </group></sheet></form>
-        </field>
-    </record>
-    <record id="action_compliance" model="ir.actions.act_window">
-        <field name="name">Compliance Status</field>
-        <field name="res_model">auditlog.attachment.compliance</field>
-        <field name="view_mode">list,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">No compliance checks recorded yet.</p>
-            <p>Compliance entries are created automatically when a controlled document reaches its configured stage.</p>
-        </field>
-    </record>
-    <menuitem id="menu_compliance" name="Compliance Status"
-              parent="menu_audit_monitoring" action="action_compliance"
-              groups="flousflow_auditlog.group_document_control_reader" sequence="26"/>
     <record id="view_exception_list" model="ir.ui.view">
         <field name="name">auditlog.attachment.exception.list</field>
         <field name="model">auditlog.attachment.exception</field>
